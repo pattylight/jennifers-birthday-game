@@ -23,24 +23,25 @@ class BossScene extends Phaser.Scene {
             this.clouds.push(cloud);
         }
 
-        // Arena floor
+        // Arena floor (raised 70px for mobile visibility)
+        const groundY = h - 86;
         this.platforms = this.physics.add.staticGroup();
         for (let x = 0; x < w; x += 32) {
-            const tile = this.platforms.create(x + 16, h - 16, 'deck_tile');
+            const tile = this.platforms.create(x + 16, groundY, 'deck_tile');
             tile.setDisplaySize(32, 32);
             tile.refreshBody();
         }
         for (let x = 0; x < w; x += 32) {
-            this.add.rectangle(x + 16, h, 32, 16, 0x6B5210);
+            this.add.rectangle(x + 16, groundY + 16, 32, 16, 0x6B5210);
         }
 
         // Elevated platforms
         const platPositions = [
-            { x: 100, y: h - 130, w: 3 },
-            { x: 350, y: h - 180, w: 3 },
-            { x: 600, y: h - 130, w: 3 },
-            { x: 250, y: h - 280, w: 2 },
-            { x: 500, y: h - 280, w: 2 },
+            { x: 100, y: h - 200, w: 3 },
+            { x: 350, y: h - 250, w: 3 },
+            { x: 600, y: h - 200, w: 3 },
+            { x: 250, y: h - 350, w: 2 },
+            { x: 500, y: h - 350, w: 2 },
         ];
         platPositions.forEach(p => {
             for (let i = 0; i < p.w; i++) {
@@ -51,11 +52,11 @@ class BossScene extends Phaser.Scene {
         });
 
         // Create Jennifer
-        this.jennifer = new Jennifer(this, 100, h - 80);
+        this.jennifer = new Jennifer(this, 100, groundY - 40);
         this.jennifer.setDepth(10);
 
         // Create Honey (will transform into gun)
-        this.honey = new Honey(this, 60, h - 80);
+        this.honey = new Honey(this, 60, groundY - 40);
         this.honey.setDepth(9);
 
         // Collisions
@@ -73,6 +74,13 @@ class BossScene extends Phaser.Scene {
         this.bossIsDead = false;
         this.canShoot = false;
         this.shootCooldown = 0;
+        this.lives = 3;
+        this.isGameOver = false;
+
+        // Lives display
+        this.livesText = this.add.text(w - 20, 12, '❤️❤️❤️', {
+            fontSize: '22px'
+        }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
 
         // Start the transformation sequence
         this.time.delayedCall(500, () => this.startTransformation());
@@ -224,7 +232,7 @@ class BossScene extends Phaser.Scene {
         this.physics.add.overlap(this.jennifer, this.boss, (jennifer, boss) => {
             try {
                 if (!boss || !boss.active || boss.isDead || boss.isInvulnerable || boss.isEntering || this.bossIsDead) return;
-                jennifer.hurt();
+                this.hurtJennifer();
             } catch(e) { console.warn('Boss touch error:', e); }
         });
 
@@ -233,7 +241,7 @@ class BossScene extends Phaser.Scene {
             try {
                 if (!ball || !ball.active) return;
                 ball.destroy();
-                jennifer.hurt();
+                this.hurtJennifer();
             } catch(e) { console.warn('Choco ball error:', e); }
         });
 
@@ -592,6 +600,44 @@ class BossScene extends Phaser.Scene {
         if (this.jennifer.x < 30) this.jennifer.x = 30;
         if (this.jennifer.x > this.cameras.main.width - 30) {
             this.jennifer.x = this.cameras.main.width - 30;
+        }
+    }
+
+    hurtJennifer() {
+        if (this.isGameOver || !this.jennifer || this.jennifer.isHurt) return;
+        this.jennifer.hurt();
+        this.lives--;
+        this.updateLivesDisplay();
+
+        if (this.lives <= 0) {
+            this.isGameOver = true;
+            this.time.delayedCall(500, () => {
+                this.physics.pause();
+                const w = this.cameras.main.width;
+                const h = this.cameras.main.height;
+                this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.7)
+                    .setScrollFactor(0).setDepth(400);
+                this.add.text(w / 2, h / 2 - 20, 'DEFEATED BY CHOCOLATE!', {
+                    fontSize: '28px', fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FF4444', stroke: '#000000', strokeThickness: 5
+                }).setOrigin(0.5).setScrollFactor(0).setDepth(401);
+                const tapText = this.add.text(w / 2, h / 2 + 25, 'Tap to retry', {
+                    fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
+                }).setOrigin(0.5).setScrollFactor(0).setDepth(401);
+                this.tweens.add({ targets: tapText, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
+                this.stopBossMusic();
+                this.input.once('pointerdown', () => {
+                    this.controls.destroy();
+                    this.scene.restart();
+                });
+            });
+        }
+    }
+
+    updateLivesDisplay() {
+        if (this.livesText) {
+            this.livesText.setText('❤️'.repeat(Math.max(0, this.lives)) + '🖤'.repeat(Math.max(0, 3 - this.lives)));
         }
     }
 }

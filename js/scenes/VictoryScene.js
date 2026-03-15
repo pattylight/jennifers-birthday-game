@@ -198,6 +198,14 @@ class VictoryScene extends Phaser.Scene {
             });
         });
 
+        // Transition to MusterScene (only on first visit)
+        const musterDone = this.registry.get('musterDone');
+        if (!musterDone) {
+            this.time.delayedCall(7000, () => {
+                this.scene.start('MusterScene');
+            });
+        }
+
         // Play celebration music
         this.time.delayedCall(500, () => {
             this.playCelebrationMusic();

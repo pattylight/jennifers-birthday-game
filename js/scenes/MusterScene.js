@@ -429,6 +429,7 @@ class MusterScene extends Phaser.Scene {
             this.cameras.main.fadeOut(1000, 0, 0, 0);
             this.cameras.main.rotation = 0;
             this.time.delayedCall(1000, () => {
+                this.registry.set('musterDone', true);
                 this.scene.start('VictoryScene');
             });
         });

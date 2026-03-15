@@ -642,7 +642,54 @@ class GameScene extends Phaser.Scene {
 
             this.playStompSound();
         } else {
-            jennifer.hurt();
+            // Caught by creepy man! Game over.
+            if (this.isGameOver) return;
+            this.isGameOver = true;
+
+            // Freeze everything
+            this.physics.pause();
+            jennifer.setTint(0xFF8888);
+
+            // Pick a random creepy line
+            const creepyLines = [
+                '"Hey beautiful, you come here often?"',
+                '"You look just like my ex wife..."',
+                '"Can I buy you a drink? I\'m very rich."',
+                '"You smell nice... is that sunscreen?"',
+                '"I\'ve been watching you from the pool deck"',
+                '"Are you here alone? I\'m in cabin 401..."',
+            ];
+            const line = creepyLines[Phaser.Math.Between(0, creepyLines.length - 1)];
+
+            // Speech bubble from enemy
+            const bubble = this.add.rectangle(enemy.x, enemy.y - 55, 260, 45, 0xFFFFFF, 0.95)
+                .setDepth(300).setStrokeStyle(2, 0x000000);
+            const creepText = this.add.text(enemy.x, enemy.y - 55, line, {
+                fontSize: '12px', fontFamily: 'Arial Black, Arial, sans-serif',
+                color: '#333333', wordWrap: { width: 240 }, align: 'center'
+            }).setOrigin(0.5).setDepth(301);
+
+            // Retry overlay after a moment
+            this.time.delayedCall(2000, () => {
+                const w = this.cameras.main.width;
+                const h = this.cameras.main.height;
+                const overlay = this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.7)
+                    .setScrollFactor(0).setDepth(400);
+                const retryText = this.add.text(w / 2, h / 2 - 20, 'CAUGHT BY A CREEP!', {
+                    fontSize: '28px', fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FF4444', stroke: '#000000', strokeThickness: 5
+                }).setOrigin(0.5).setScrollFactor(0).setDepth(401);
+                const tapText = this.add.text(w / 2, h / 2 + 25, 'Tap to retry', {
+                    fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
+                }).setOrigin(0.5).setScrollFactor(0).setDepth(401);
+                this.tweens.add({ targets: tapText, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
+
+                this.input.once('pointerdown', () => {
+                    this.controls.destroy();
+                    this.scene.restart();
+                });
+            });
         }
     }
 
@@ -932,6 +979,11 @@ class GameScene extends Phaser.Scene {
             stroke: '#000000',
             strokeThickness: 4
         }).setScrollFactor(0).setDepth(100);
+
+        // Life heart
+        this.add.text(this.cameras.main.width - 40, 20, '❤️', {
+            fontSize: '24px'
+        }).setScrollFactor(0).setDepth(100).setOrigin(0.5, 0);
 
         // "HONEY" label above the dog
         this.honeyLabel = this.add.text(0, 0, 'HONEY', {

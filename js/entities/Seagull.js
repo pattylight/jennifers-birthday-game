@@ -199,7 +199,7 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
                 if (this.isDead) return;
                 this.scene.tweens.add({
                     targets: this,
-                    y: this.scene.cameras.main.height - 80,
+                    y: this.scene.cameras.main.height - 150,
                     duration: 200,
                     ease: 'Power4',
                     onComplete: () => {
@@ -210,7 +210,7 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
 
                         // Shockwave
                         const wave = this.scene.add.rectangle(
-                            this.x, this.scene.cameras.main.height - 35,
+                            this.x, this.scene.cameras.main.height - 105,
                             20, 8, 0x5C3317, 0.7
                         ).setDepth(6);
                         this.scene.tweens.add({

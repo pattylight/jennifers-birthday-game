@@ -29,14 +29,14 @@ class ShooScene extends Phaser.Scene {
             this.add.circle(x, 115, 3, col, 0.5).setDepth(-3);
         }
 
-        // Floor
+        // Floor (raised 70px for mobile)
         for (let x = 0; x < w; x += 32) {
-            this.add.rectangle(x + 16, h - 16, 32, 32, 0xA08060).setDepth(0);
-            this.add.rectangle(x + 16, h - 16, 30, 30, 0xB8976A, 0.5).setDepth(0);
+            this.add.rectangle(x + 16, h - 86, 32, 32, 0xA08060).setDepth(0);
+            this.add.rectangle(x + 16, h - 86, 30, 30, 0xB8976A, 0.5).setDepth(0);
         }
 
         // === BOYFRIEND — center, looking jacked ===
-        this.boyfriend = this.add.image(w / 2, h - 75, 'boyfriend').setDepth(5).setScale(1.2);
+        this.boyfriend = this.add.image(w / 2, h - 145, 'boyfriend').setDepth(5).setScale(1.2);
 
         // Flexing animation
         this.tweens.add({
@@ -46,7 +46,7 @@ class ShooScene extends Phaser.Scene {
         });
 
         // Label
-        this.bfLabel = this.add.text(w / 2, h - 118, 'PATRICK', {
+        this.bfLabel = this.add.text(w / 2, h - 188, 'PATRICK', {
             fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(10);
@@ -59,12 +59,12 @@ class ShooScene extends Phaser.Scene {
         }
 
         // === JENNIFER — controllable ===
-        this.jennifer = new Jennifer(this, w / 2 - 60, h - 60);
+        this.jennifer = new Jennifer(this, w / 2 - 60, h - 130);
         this.jennifer.setDepth(8);
 
         // Simple floor collider
         this.platforms = this.physics.add.staticGroup();
-        const floor = this.platforms.create(w / 2, h, 'deck_tile');
+        const floor = this.platforms.create(w / 2, h - 70, 'deck_tile');
         floor.setDisplaySize(w, 32).refreshBody();
         this.physics.add.collider(this.jennifer, this.platforms);
 
@@ -213,7 +213,7 @@ class ShooScene extends Phaser.Scene {
         const w = 800, h = 450;
         const fromLeft = Math.random() < 0.5;
         const x = fromLeft ? -30 : w + 30;
-        const yVariation = Phaser.Math.Between(h - 85, h - 55);
+        const yVariation = Phaser.Math.Between(h - 155, h - 125);
 
         const girl = this.add.image(x, yVariation, 'approach_girl').setDepth(6);
         girl.setFlipX(!fromLeft);
