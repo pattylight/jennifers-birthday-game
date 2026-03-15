@@ -88,22 +88,111 @@
     <script src="js/config.js"></script>
 
     <!-- Add to Home Screen prompt for fullscreen on iPhone -->
-    <div id="a2hs-banner" style="
-        display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 99998;
-        background: rgba(0,0,0,0.92); color: white; padding: 14px 18px;
-        font-family: -apple-system, sans-serif; font-size: 15px;
-        text-align: center; line-height: 1.5;
-    ">
-        For fullscreen: tap <strong>Share</strong> &#x2934; then <strong>"Add to Home Screen"</strong>
-        <button onclick="document.getElementById('a2hs-banner').style.display='none'; localStorage.setItem('a2hs-dismissed','1');"
-            style="margin-left: 12px; background: #FF69B4; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 14px; cursor: pointer;">
-            Got it
-        </button>
+    <style>
+        #a2hs-overlay {
+            display: none; position: fixed; inset: 0; z-index: 99998;
+            background: rgba(0,0,0,0.85);
+            justify-content: center; align-items: center;
+            font-family: -apple-system, 'Helvetica Neue', sans-serif;
+            animation: a2hs-fadein 0.4s ease;
+        }
+        #a2hs-overlay.show { display: flex; }
+        @keyframes a2hs-fadein { from { opacity: 0; } to { opacity: 1; } }
+
+        .a2hs-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 2px solid #FF69B4;
+            border-radius: 20px;
+            padding: 28px 34px;
+            max-width: 380px;
+            width: 90%;
+            text-align: center;
+            color: white;
+            box-shadow: 0 0 40px rgba(255,105,180,0.3);
+        }
+        .a2hs-title {
+            font-size: 20px; font-weight: 700; margin-bottom: 18px;
+            color: #FF69B4;
+        }
+        .a2hs-steps {
+            display: flex; flex-direction: column; gap: 16px;
+            margin-bottom: 22px;
+        }
+        .a2hs-step {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 15px; text-align: left; line-height: 1.4;
+        }
+        .a2hs-step-num {
+            flex-shrink: 0; width: 32px; height: 32px;
+            background: #FF69B4; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 16px;
+        }
+        .a2hs-share-icon {
+            display: inline-block; font-size: 22px;
+            animation: a2hs-bounce 1.5s ease infinite;
+        }
+        @keyframes a2hs-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+        .a2hs-arrow {
+            display: block; margin: 0 auto;
+            font-size: 28px; color: #FF69B4;
+            animation: a2hs-point 1.2s ease infinite;
+        }
+        @keyframes a2hs-point {
+            0%, 100% { transform: translateY(0); opacity: 1; }
+            50% { transform: translateY(8px); opacity: 0.5; }
+        }
+        .a2hs-dismiss {
+            background: #FF69B4; color: white; border: none;
+            padding: 10px 28px; border-radius: 10px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .a2hs-dismiss:active { transform: scale(0.95); }
+
+        /* Arrow pointing down to Safari share button */
+        .a2hs-safari-arrow {
+            position: fixed; bottom: 12px; left: 50%; z-index: 99999;
+            transform: translateX(-50%);
+            font-size: 36px; color: #FF69B4;
+            animation: a2hs-point 1.2s ease infinite;
+            text-shadow: 0 0 10px rgba(255,105,180,0.6);
+        }
+    </style>
+
+    <div id="a2hs-overlay">
+        <div class="a2hs-card">
+            <div class="a2hs-title">&#127911; Play Fullscreen!</div>
+            <div class="a2hs-steps">
+                <div class="a2hs-step">
+                    <div class="a2hs-step-num">1</div>
+                    <div>Tap the <strong>Share</strong> button <span class="a2hs-share-icon">&#x2934;&#xFE0F;</span> at the bottom of Safari</div>
+                </div>
+                <div class="a2hs-arrow">&#x2B07;&#xFE0F;</div>
+                <div class="a2hs-step">
+                    <div class="a2hs-step-num">2</div>
+                    <div>Scroll down and tap <strong>"Add to Home Screen"</strong></div>
+                </div>
+                <div class="a2hs-arrow">&#x2B07;&#xFE0F;</div>
+                <div class="a2hs-step">
+                    <div class="a2hs-step-num">3</div>
+                    <div>Open the game from your <strong>Home Screen</strong> for fullscreen! &#127881;</div>
+                </div>
+            </div>
+            <button class="a2hs-dismiss" onclick="document.getElementById('a2hs-overlay').classList.remove('show'); document.querySelector('.a2hs-safari-arrow').style.display='none'; localStorage.setItem('a2hs-dismissed','1');">
+                Got it!
+            </button>
+        </div>
+        <div class="a2hs-safari-arrow">&#x2B07;&#xFE0F;</div>
     </div>
+
     <script>
-        // Show banner only on iOS Safari, not if already in standalone mode
+        // Show overlay only on iOS Safari, not if already in standalone mode
         if (/iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone && !localStorage.getItem('a2hs-dismissed')) {
-            document.getElementById('a2hs-banner').style.display = 'block';
+            document.getElementById('a2hs-overlay').classList.add('show');
         }
     </script>
 </body>

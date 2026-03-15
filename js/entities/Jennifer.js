@@ -12,6 +12,7 @@ class Jennifer extends Phaser.Physics.Arcade.Sprite {
         this.moveSpeed = 200;
         this.jumpForce = -420;
         this.isAlive = true;
+        this.isHurt = false;
         this.canDoubleJump = false;
         this.hasDoubleJumped = false;
 
@@ -91,7 +92,8 @@ class Jennifer extends Phaser.Physics.Arcade.Sprite {
     }
 
     hurt() {
-        if (!this.isAlive) return;
+        if (!this.isAlive || this.isHurt) return;
+        this.isHurt = true;
         // Flash and knockback
         this.setVelocityY(-200);
         this.scene.tweens.add({
@@ -100,7 +102,10 @@ class Jennifer extends Phaser.Physics.Arcade.Sprite {
             duration: 100,
             yoyo: true,
             repeat: 5,
-            onComplete: () => { this.alpha = 1; }
+            onComplete: () => {
+                this.alpha = 1;
+                this.isHurt = false;
+            }
         });
     }
 

@@ -18,7 +18,7 @@ class MemoryScene extends Phaser.Scene {
 
         // Corner decorations
         [{ x: 20, y: 20 }, { x: w - 20, y: 20 }, { x: 20, y: h - 20 }, { x: w - 20, y: h - 20 }].forEach(pos => {
-            this.add.text(pos.x, pos.y, '~', { fontSize: '14px' }).setOrigin(0.5).setDepth(2);
+            this.add.text(pos.x, pos.y, '🍫', { fontSize: '14px' }).setOrigin(0.5).setDepth(2);
         });
 
         // Title
@@ -34,12 +34,12 @@ class MemoryScene extends Phaser.Scene {
 
         // 6 chocolate types = 6 pairs = 12 cards (4x3 grid)
         this.chocolateTypes = [
-            { name: 'Dark', emoji: 'DK', color: 0x3E2723, textColor: '#D7CCC8' },
-            { name: 'Milk', emoji: 'ML', color: 0x6D4C41, textColor: '#EFEBE9' },
-            { name: 'White', emoji: 'WH', color: 0xBCAAA4, textColor: '#3E2723' },
-            { name: 'Truffle', emoji: 'TR', color: 0x4E342E, textColor: '#EFEBE9' },
-            { name: 'Caramel', emoji: 'CA', color: 0xE65100, textColor: '#FFF3E0' },
-            { name: 'Praline', emoji: 'PR', color: 0x6A1B9A, textColor: '#F3E5F5' },
+            { name: 'Dark', emoji: '🍫', color: 0x3E2723, textColor: '#D7CCC8' },
+            { name: 'Milk', emoji: '🥛🍫', color: 0x6D4C41, textColor: '#EFEBE9' },
+            { name: 'White', emoji: '🤍', color: 0xBCAAA4, textColor: '#3E2723' },
+            { name: 'Truffle', emoji: '🟤', color: 0x4E342E, textColor: '#EFEBE9' },
+            { name: 'Caramel', emoji: '🍬', color: 0xE65100, textColor: '#FFF3E0' },
+            { name: 'Praline', emoji: '💜', color: 0x6A1B9A, textColor: '#F3E5F5' },
         ];
 
         // Create shuffled pairs
@@ -75,7 +75,7 @@ class MemoryScene extends Phaser.Scene {
                 .setStrokeStyle(2, 0xA1887F)
                 .setInteractive({ useHandCursor: true })
                 .setDepth(5);
-            const backEmoji = this.add.text(x, y - 8, '?', { fontSize: '26px' })
+            const backEmoji = this.add.text(x, y - 8, '🍫', { fontSize: '26px' })
                 .setOrigin(0.5).setDepth(6);
             const backQ = this.add.text(x, y + 18, '?', {
                 fontSize: '18px', fontFamily: 'Courier New, monospace',
@@ -253,7 +253,7 @@ class MemoryScene extends Phaser.Scene {
         this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.5).setDepth(150);
 
         // Star rating
-        const stars = this.moves <= 8 ? '***' : this.moves <= 12 ? '**' : '*';
+        const stars = this.moves <= 8 ? '⭐⭐⭐' : this.moves <= 12 ? '⭐⭐' : '⭐';
 
         const text = this.add.text(w / 2, h / 2 - 30,
             'All Chocolates Matched!\n' + stars + '\nMoves: ' + this.moves,
@@ -279,7 +279,7 @@ class MemoryScene extends Phaser.Scene {
         // Chocolate confetti
         this.time.addEvent({
             delay: 80, repeat: 30, callback: () => {
-                const emojis = ['*', 'o', '+', 'x', '#'];
+                const emojis = ['🍫', '🤎', '🍬', '✨', '🎉'];
                 const choc = this.add.text(
                     Phaser.Math.Between(50, w - 50), -20,
                     emojis[Phaser.Math.Between(0, emojis.length - 1)],
