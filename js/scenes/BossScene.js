@@ -77,6 +77,10 @@ class BossScene extends Phaser.Scene {
         this.lives = 3;
         this.isGameOver = false;
 
+        // Stop any leftover music and clean up on shutdown
+        this.stopBossMusic();
+        this.events.on('shutdown', () => this.stopBossMusic());
+
         // Lives display
         this.livesText = this.add.text(w - 20, 12, '❤️❤️❤️', {
             fontSize: '22px'

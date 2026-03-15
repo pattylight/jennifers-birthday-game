@@ -13,6 +13,15 @@ class GameScene extends Phaser.Scene {
         this.martinisCollected = 0;
         this.totalMartinis = 15;
 
+        // Game state
+        this.isGameOver = false;
+
+        // Stop any leftover music from previous run
+        this.stopMusic();
+
+        // Clean up music on scene shutdown
+        this.events.on('shutdown', () => this.stopMusic());
+
         // Set world bounds
         this.physics.world.setBounds(0, 0, this.levelWidth, this.levelHeight);
 
@@ -686,6 +695,7 @@ class GameScene extends Phaser.Scene {
                 this.tweens.add({ targets: tapText, alpha: 0.3, duration: 600, yoyo: true, repeat: -1 });
 
                 this.input.once('pointerdown', () => {
+                    this.stopMusic();
                     this.controls.destroy();
                     this.scene.restart();
                 });
