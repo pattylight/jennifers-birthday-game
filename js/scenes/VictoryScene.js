@@ -204,6 +204,33 @@ class VictoryScene extends Phaser.Scene {
             this.time.delayedCall(7000, () => {
                 this.scene.start('MusterScene');
             });
+        } else {
+            // Second visit (after muster) — show "Play Again" button
+            this.time.delayedCall(8000, () => {
+                const replayText = this.add.text(w / 2, h - 20, '» PLAY AGAIN «', {
+                    fontSize: '20px',
+                    fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FFD700',
+                    stroke: '#000000',
+                    strokeThickness: 3
+                }).setOrigin(0.5).setDepth(100).setInteractive({ useHandCursor: true });
+
+                this.tweens.add({
+                    targets: replayText,
+                    alpha: 0.3,
+                    duration: 700,
+                    yoyo: true,
+                    repeat: -1
+                });
+
+                replayText.on('pointerdown', () => {
+                    this.registry.set('musterDone', false);
+                    this.cameras.main.fadeOut(500, 0, 0, 0);
+                    this.time.delayedCall(500, () => {
+                        this.scene.start('TitleScene');
+                    });
+                });
+            });
         }
 
         // Play celebration music

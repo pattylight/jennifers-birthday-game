@@ -17,7 +17,7 @@ const gameConfig = {
             debug: false
         }
     },
-    scene: [BootScene, TitleScene, TeslaScene, GameScene, MemoryScene, ShooScene, BossScene, VictoryScene, MusterScene],
+    scene: [BootScene, TitleScene, WakeUpScene, TeslaScene, GameScene, MemoryScene, ShooScene, NightClubScene, BossScene, VictoryScene, MusterScene],
     input: {
         activePointers: 3
     }

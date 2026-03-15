@@ -11,15 +11,17 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         this.body.setBounce(0.1);
         this.setCollideWorldBounds(true);
 
-        this.maxHP = 10;
-        this.hp = 10;
+        this.maxHP = 12;
+        this.hp = 12;
         this.isDead = false;
         this.isInvulnerable = false;
         this.isEntering = true;
         this.phase = 1;
+        this.phaseTransitioning = false;
 
         this.attackTimer = 0;
         this.slamming = false;
+        this.telegraphing = false;
 
         this.chocoBalls = scene.physics.add.group();
     }
@@ -53,8 +55,14 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         this.scene.cameras.main.shake(100, 0.008);
         this.playHitSound();
 
-        if (this.hp <= 3) this.phase = 3;
-        else if (this.hp <= 6) this.phase = 2;
+        // Check for phase transitions
+        const oldPhase = this.phase;
+        if (this.hp <= 4) this.phase = 3;
+        else if (this.hp <= 8) this.phase = 2;
+
+        if (this.phase !== oldPhase) {
+            this.startPhaseTransition(this.phase);
+        }
 
         this.scene.time.delayedCall(400, () => {
             this.isInvulnerable = false;
@@ -148,8 +156,79 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         } catch(e) {}
     }
 
+    startPhaseTransition(newPhase) {
+        this.phaseTransitioning = true;
+        this.isInvulnerable = true;
+        this.body.setVelocity(0, 0);
+
+        // Clear existing projectiles
+        this.chocoBalls.clear(true, true);
+
+        // Visual flash
+        this.setTint(0xFFFFFF);
+        this.scene.cameras.main.shake(300, 0.015);
+
+        const w = this.scene.cameras.main.width;
+        const h = this.scene.cameras.main.height;
+
+        let phaseText = '';
+        let phaseColor = '#FFFFFF';
+        if (newPhase === 2) {
+            phaseText = 'PHASE 2: CHOCOLATE STORM!';
+            phaseColor = '#FF8C00';
+            this.setTint(0xCC6600);
+        } else if (newPhase === 3) {
+            phaseText = 'PHASE 3: MELTDOWN!';
+            phaseColor = '#FF2222';
+            this.setTint(0xFF4444);
+            this.setScale(1.15);
+        }
+
+        const announcement = this.scene.add.text(w / 2, h / 2 - 30, phaseText, {
+            fontSize: '26px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
+            color: phaseColor,
+            stroke: '#000000',
+            strokeThickness: 5
+        }).setOrigin(0.5).setDepth(200).setScale(0.3);
+
+        this.scene.tweens.add({
+            targets: announcement,
+            scaleX: 1, scaleY: 1,
+            duration: 400,
+            ease: 'Back.easeOut'
+        });
+
+        // Phase transition sound
+        try {
+            const audioCtx = this.scene.sound.context;
+            if (audioCtx) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.5);
+            }
+        } catch(e) {}
+
+        // Pause gives player breathing room
+        this.scene.time.delayedCall(1800, () => {
+            if (this.isDead) return;
+            announcement.destroy();
+            this.phaseTransitioning = false;
+            this.isInvulnerable = false;
+            this.attackTimer = 0;
+        });
+    }
+
     shootChocolate(targetX, targetY) {
-        if (this.isDead || this.isEntering) return;
+        if (this.isDead || this.isEntering || this.phaseTransitioning) return;
         if (!this.chocoBalls || !this.scene) return;
 
         const ball = this.chocoBalls.create(this.x, this.y + 20, 'choco_ball');
@@ -157,11 +236,11 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         ball.setDepth(8);
 
         const angle = Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY);
-        const speed = 180 + this.phase * 50;
+        const speed = 140 + this.phase * 40;
         ball.setVelocity(Math.cos(angle) * speed, Math.sin(angle) * speed);
         ball.body.setAllowGravity(false);
 
-        this.scene.time.delayedCall(3000, () => {
+        this.scene.time.delayedCall(3500, () => {
             if (ball && ball.active) ball.destroy();
         });
 
@@ -183,8 +262,35 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         } catch(e) {}
     }
 
+    telegraphAttack(callback) {
+        if (this.isDead || this.telegraphing) return;
+        this.telegraphing = true;
+
+        // Flash warning above boss
+        const warn = this.scene.add.text(this.x, this.y - 50, '!', {
+            fontSize: '28px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
+            color: '#FF0000',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setOrigin(0.5).setDepth(200);
+
+        this.scene.tweens.add({
+            targets: warn,
+            alpha: 0.3,
+            duration: 150,
+            yoyo: true,
+            repeat: 2,
+            onComplete: () => {
+                warn.destroy();
+                this.telegraphing = false;
+                if (!this.isDead) callback();
+            }
+        });
+    }
+
     groundSlam() {
-        if (this.isDead || this.isEntering || this.slamming) return;
+        if (this.isDead || this.isEntering || this.slamming || this.phaseTransitioning) return;
         this.slamming = true;
 
         const startY = this.y;
@@ -248,9 +354,18 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
         const jennifer = this.scene.jennifer;
         if (!jennifer) return;
 
-        // Slowly chase Jennifer (not during slam)
-        if (!this.slamming) {
-            const speed = 30 + this.phase * 20;
+        // Don't act during phase transitions
+        if (this.phaseTransitioning) {
+            this.setVelocityX(0);
+            // Pulsing glow during transition
+            this.alpha = 0.6 + Math.sin(time * 0.01) * 0.4;
+            return;
+        }
+        this.alpha = 1;
+
+        // Chase Jennifer (not during slam)
+        if (!this.slamming && !this.telegraphing) {
+            const speed = this.phase === 1 ? 35 : this.phase === 2 ? 55 : 45;
             if (jennifer.x < this.x - 30) {
                 this.setVelocityX(-speed);
                 this.setFlipX(true);
@@ -262,27 +377,52 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        // Attack timer
+        // Attack timer — more generous intervals
         this.attackTimer += delta;
-        const attackInterval = this.phase === 1 ? 2200 : this.phase === 2 ? 1500 : 900;
+        const attackInterval = this.phase === 1 ? 2800 : this.phase === 2 ? 2000 : 1400;
 
         if (this.attackTimer >= attackInterval) {
             this.attackTimer = 0;
             const rand = Math.random();
 
-            if (this.phase >= 2 && rand < 0.3) {
-                this.groundSlam();
+            if (this.phase === 1) {
+                // Phase 1: Simple single shots with telegraph
+                this.telegraphAttack(() => {
+                    this.shootChocolate(jennifer.x, jennifer.y);
+                });
+            } else if (this.phase === 2) {
+                // Phase 2: Mix of slams and aimed shots
+                if (rand < 0.3) {
+                    this.telegraphAttack(() => this.groundSlam());
+                } else {
+                    this.telegraphAttack(() => {
+                        this.shootChocolate(jennifer.x, jennifer.y);
+                        // Occasional spread shot
+                        if (rand > 0.6) {
+                            this.scene.time.delayedCall(300, () => {
+                                this.shootChocolate(jennifer.x + 80, jennifer.y - 40);
+                            });
+                        }
+                    });
+                }
             } else {
-                this.shootChocolate(jennifer.x, jennifer.y);
-                if (this.phase === 3 && rand > 0.5) {
-                    this.scene.time.delayedCall(200, () => {
-                        this.shootChocolate(jennifer.x + 50, jennifer.y - 30);
+                // Phase 3: Desperate — rapid bursts + slams, but boss is slower
+                if (rand < 0.35) {
+                    this.telegraphAttack(() => this.groundSlam());
+                } else {
+                    this.telegraphAttack(() => {
+                        this.shootChocolate(jennifer.x, jennifer.y);
+                        this.scene.time.delayedCall(250, () => {
+                            this.shootChocolate(jennifer.x - 60, jennifer.y);
+                        });
                     });
                 }
             }
         }
 
-        // Wobble animation
-        this.angle = Math.sin(time * 0.003) * (2 + this.phase);
+        // Wobble animation — more frantic in later phases
+        const wobbleSpeed = this.phase === 1 ? 0.002 : this.phase === 2 ? 0.004 : 0.006;
+        const wobbleAmt = this.phase === 1 ? 2 : this.phase === 2 ? 4 : 6;
+        this.angle = Math.sin(time * wobbleSpeed) * wobbleAmt;
     }
 }

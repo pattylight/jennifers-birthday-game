@@ -11,8 +11,10 @@ class TitleScene extends Phaser.Scene {
         // Sky gradient background
         this.add.image(w / 2, h / 2, 'bg_ocean').setDisplaySize(w, h);
 
-        // Sun
-        this.add.image(w - 80, 60, 'sun').setScale(1.5);
+        // Sun (tap to toggle debug menu)
+        const sun = this.add.image(w - 80, 60, 'sun').setScale(1.5).setInteractive({ useHandCursor: true });
+        this.debugVisible = false;
+        this.debugLinks = [];
 
         // Clouds (parallax)
         this.clouds = [];
@@ -124,12 +126,60 @@ class TitleScene extends Phaser.Scene {
             strokeThickness: 2
         }).setOrigin(0.5);
 
-        // Click/tap to start
+        // Click/tap to start (ignore if a debug link was clicked)
+        this.debugClicked = false;
         this.input.once('pointerdown', () => {
+            if (this.debugClicked) return;
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.time.delayedCall(500, () => {
-                this.scene.start('TeslaScene');
+                this.scene.start('WakeUpScene');
             });
+        });
+
+        // === DEBUG: Scene select links (hidden by default, toggle with sun) ===
+        const scenes = [
+            ['WakeUp', 'WakeUpScene'],
+            ['Tesla', 'TeslaScene'],
+            ['Game', 'GameScene'],
+            ['Memory', 'MemoryScene'],
+            ['Shoo', 'ShooScene'],
+            ['Club', 'NightClubScene'],
+            ['Boss', 'BossScene'],
+            ['Victory', 'VictoryScene'],
+            ['Muster', 'MusterScene'],
+        ];
+
+        const debugBg = this.add.rectangle(w / 2, h - 45, 420, 70, 0x000000, 0.7)
+            .setDepth(299).setVisible(false);
+        this.debugLinks.push(debugBg);
+
+        scenes.forEach((entry, i) => {
+            const label = entry[0];
+            const key = entry[1];
+            const cols = 5;
+            const bx = 60 + (i % cols) * 80;
+            const by = h - 58 + Math.floor(i / cols) * 22;
+            const link = this.add.text(bx, by, label, {
+                fontSize: '12px',
+                fontFamily: 'Arial Black, Arial, sans-serif',
+                color: '#00FFFF',
+                stroke: '#000000',
+                strokeThickness: 2
+            }).setOrigin(0.5).setInteractive({ useHandCursor: true }).setDepth(300).setVisible(false);
+            link.on('pointerdown', () => {
+                this.debugClicked = true;
+                this.cameras.main.fadeOut(300, 0, 0, 0);
+                this.time.delayedCall(300, () => this.scene.start(key));
+            });
+            link.on('pointerover', () => link.setColor('#FFD700'));
+            link.on('pointerout', () => link.setColor('#00FFFF'));
+            this.debugLinks.push(link);
+        });
+
+        sun.on('pointerdown', () => {
+            this.debugClicked = true;
+            this.debugVisible = !this.debugVisible;
+            this.debugLinks.forEach(obj => obj.setVisible(this.debugVisible));
         });
 
         // Fade in

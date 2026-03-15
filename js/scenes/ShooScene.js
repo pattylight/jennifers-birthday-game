@@ -77,7 +77,7 @@ class ShooScene extends Phaser.Scene {
         this.jealousyMeter = 0;
         this.maxJealousy = 5;
         this.wave = 0;
-        this.totalWaves = 5;
+        this.totalWaves = 6;
         this.waveTimer = 0;
         this.waveInterval = 3800;
         this.girlSpeed = 40;
@@ -103,12 +103,12 @@ class ShooScene extends Phaser.Scene {
             color: '#88CCFF', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(200);
 
-        const intro2 = this.add.text(w / 2, h / 2 - 38, '"BRB, I\'m gonna grab us some towels!"', {
+        const intro2 = this.add.text(w / 2, h / 2 - 38, '"BRB babe, gonna grab us some towels!"', {
             fontSize: '23px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(200);
 
-        // After 2s, Patrick walks off and girls warning appears
+        // After 2s, Patrick walks off
         this.time.delayedCall(2200, () => {
             this.tweens.add({
                 targets: patrickSprite,
@@ -120,18 +120,20 @@ class ShooScene extends Phaser.Scene {
                 alpha: 0, duration: 400
             });
 
+            // Girls notice Patrick's muscles
             this.time.delayedCall(900, () => {
-                const warn1 = this.add.text(w / 2, h / 2 - 50, 'Oh no!!', {
+                const warn1 = this.add.text(w / 2, h / 2 - 55, 'Oh no!!', {
                     fontSize: '31px', fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FF4444', stroke: '#000000', strokeThickness: 5
                 }).setOrigin(0.5).setDepth(200);
 
-                const warn2 = this.add.text(w / 2, h / 2 - 10, 'All these girls are approaching Patrick!', {
-                    fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
-                    color: '#FFD700', stroke: '#000000', strokeThickness: 4
+                const warn2 = this.add.text(w / 2, h / 2 - 15, "The girls on the pool deck spotted\nPatrick's big muscles! 💪", {
+                    fontSize: '19px', fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#FFD700', stroke: '#000000', strokeThickness: 4,
+                    align: 'center'
                 }).setOrigin(0.5).setDepth(200);
 
-                const warn3 = this.add.text(w / 2, h / 2 + 22, '\u{1F449} Run into them to SHOO them away! \u{1F448}', {
+                const warn3 = this.add.text(w / 2, h / 2 + 30, '👉 Run into them to SHOO them away! 👈', {
                     fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
                 }).setOrigin(0.5).setDepth(200);
@@ -186,6 +188,12 @@ class ShooScene extends Phaser.Scene {
         this.wave = this.spawnedWaves;
         this.waveText.setText('Wave: ' + this.wave + '/' + this.totalWaves);
         this.waveSpawning = true;
+
+        // Wave 6: RIDICULOUS MODE
+        if (this.wave === 6) {
+            this.spawnBossWave();
+            return;
+        }
 
         // Increase difficulty each wave
         const girlCount = Math.min(2 + this.wave, 6);
@@ -431,20 +439,20 @@ class ShooScene extends Phaser.Scene {
         this.playVictoryJingle();
 
         this.time.delayedCall(4000, () => {
-            // Chocolate monster story transition
+            // Night club transition
             const overlay2 = this.add.rectangle(400, 225, 800, 450, 0x000000, 0.85)
                 .setDepth(300).setAlpha(0);
-            const monsterText1 = this.add.text(400, 180, 'All of that anger built up and created...', {
+            const clubText1 = this.add.text(400, 180, "Time to celebrate Jennifer's birthday...", {
                 fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 4
             }).setOrigin(0.5).setDepth(301).setAlpha(0);
-            const monsterText2 = this.add.text(400, 225, 'A CHOCOLATE MONSTER!', {
+            const clubText2 = this.add.text(400, 225, '🎵 AT THE NIGHT CLUB! 🎵', {
                 fontSize: '29px', fontFamily: 'Arial Black, Arial, sans-serif',
-                color: '#FF4444', stroke: '#000000', strokeThickness: 5
+                color: '#FF00FF', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(301).setAlpha(0);
 
             this.tweens.add({
-                targets: [overlay2, monsterText1, monsterText2],
+                targets: [overlay2, clubText1, clubText2],
                 alpha: 1, duration: 600
             });
 
@@ -453,7 +461,7 @@ class ShooScene extends Phaser.Scene {
                 this.cameras.main.fadeOut(800, 0, 0, 0);
                 this.time.delayedCall(800, () => {
                     this.controls.destroy();
-                    this.scene.start('BossScene');
+                    this.scene.start('NightClubScene');
                 });
             });
         });

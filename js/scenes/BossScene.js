@@ -74,7 +74,7 @@ class BossScene extends Phaser.Scene {
         this.bossIsDead = false;
         this.canShoot = false;
         this.shootCooldown = 0;
-        this.lives = 3;
+        this.lives = 4;
         this.isGameOver = false;
 
         // Stop any leftover music and clean up on shutdown
@@ -82,7 +82,7 @@ class BossScene extends Phaser.Scene {
         this.events.on('shutdown', () => this.stopBossMusic());
 
         // Lives display
-        this.livesText = this.add.text(w - 20, 12, '❤️❤️❤️', {
+        this.livesText = this.add.text(w - 20, 12, '❤️❤️❤️❤️', {
             fontSize: '22px'
         }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
 
@@ -350,8 +350,8 @@ class BossScene extends Phaser.Scene {
             duration: 300,
             ease: 'Power2'
         });
-        if (pct <= 0.3) this.hpBar.setFillStyle(0xFF0000);
-        else if (pct <= 0.6) this.hpBar.setFillStyle(0xCC6600);
+        if (pct <= 0.33) this.hpBar.setFillStyle(0xFF0000);
+        else if (pct <= 0.66) this.hpBar.setFillStyle(0xCC6600);
     }
 
     bossDefeated() {
@@ -641,7 +641,7 @@ class BossScene extends Phaser.Scene {
 
     updateLivesDisplay() {
         if (this.livesText) {
-            this.livesText.setText('❤️'.repeat(Math.max(0, this.lives)) + '🖤'.repeat(Math.max(0, 3 - this.lives)));
+            this.livesText.setText('❤️'.repeat(Math.max(0, this.lives)) + '🖤'.repeat(Math.max(0, 4 - this.lives)));
         }
     }
 }
