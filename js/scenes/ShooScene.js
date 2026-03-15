@@ -19,7 +19,7 @@ class ShooScene extends Phaser.Scene {
         this.add.rectangle(w / 2, 150, 300, 70, 0x40E0D0, 0.5).setDepth(-4);
         this.add.rectangle(w / 2, 150, 290, 60, 0x5DE0D0, 0.4).setDepth(-4);
         this.add.text(w / 2, 125, 'POOL DECK PARTY', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#1565C0', strokeThickness: 2
         }).setOrigin(0.5).setDepth(-3).setAlpha(0.7);
 
@@ -46,15 +46,15 @@ class ShooScene extends Phaser.Scene {
         });
 
         // Label
-        this.bfLabel = this.add.text(w / 2, h - 118, 'YOUR MAN', {
-            fontSize: '11px', fontFamily: 'Courier New, monospace',
+        this.bfLabel = this.add.text(w / 2, h - 118, 'PATRICK', {
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(10);
 
         // Heart eyes circle around boyfriend
         this.bfHearts = [];
         for (let i = 0; i < 3; i++) {
-            const heart = this.add.text(0, 0, '<3', { fontSize: '12px' }).setDepth(4).setAlpha(0.4);
+            const heart = this.add.text(0, 0, '❤️', { fontSize: '18px' }).setDepth(4).setAlpha(0.4);
             this.bfHearts.push({ obj: heart, angle: i * (Math.PI * 2 / 3) });
         }
 
@@ -85,6 +85,7 @@ class ShooScene extends Phaser.Scene {
         this.gameWon = false;
         this.spawnedWaves = 0;
         this.wavePending = false;
+        this.waveSpawning = false;
 
         // === UI ===
         this.createUI();
@@ -98,12 +99,12 @@ class ShooScene extends Phaser.Scene {
             .setScale(1.0).setDepth(200);
 
         const intro1 = this.add.text(w / 2, h / 2 - 65, 'Patrick says:', {
-            fontSize: '16px', fontFamily: 'Courier New, monospace',
+            fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#88CCFF', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(200);
 
         const intro2 = this.add.text(w / 2, h / 2 - 38, '"BRB, I\'m gonna grab us some towels!"', {
-            fontSize: '17px', fontFamily: 'Courier New, monospace',
+            fontSize: '23px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(200);
 
@@ -121,17 +122,17 @@ class ShooScene extends Phaser.Scene {
 
             this.time.delayedCall(900, () => {
                 const warn1 = this.add.text(w / 2, h / 2 - 50, 'Oh no!!', {
-                    fontSize: '26px', fontFamily: 'Courier New, monospace',
+                    fontSize: '31px', fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FF4444', stroke: '#000000', strokeThickness: 5
                 }).setOrigin(0.5).setDepth(200);
 
                 const warn2 = this.add.text(w / 2, h / 2 - 10, 'All these girls are approaching Patrick!', {
-                    fontSize: '15px', fontFamily: 'Courier New, monospace',
+                    fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FFD700', stroke: '#000000', strokeThickness: 4
                 }).setOrigin(0.5).setDepth(200);
 
                 const warn3 = this.add.text(w / 2, h / 2 + 22, '\u{1F449} Run into them to SHOO them away! \u{1F448}', {
-                    fontSize: '13px', fontFamily: 'Courier New, monospace',
+                    fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
                 }).setOrigin(0.5).setDepth(200);
 
@@ -158,7 +159,7 @@ class ShooScene extends Phaser.Scene {
 
         // Jealousy meter
         this.add.text(20, 12, 'Jealousy:', {
-            fontSize: '12px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF69B4', stroke: '#000000', strokeThickness: 2
         }).setDepth(100);
 
@@ -167,13 +168,13 @@ class ShooScene extends Phaser.Scene {
 
         // Wave counter
         this.waveText = this.add.text(w - 20, 12, 'Wave: 0/' + this.totalWaves, {
-            fontSize: '12px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 2
         }).setOrigin(1, 0).setDepth(100);
 
         // Shoo counter
         this.shooText = this.add.text(w / 2, 12, '\u{1F44B} Shooed: 0', {
-            fontSize: '12px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5, 0).setDepth(100);
     }
@@ -184,13 +185,14 @@ class ShooScene extends Phaser.Scene {
         this.spawnedWaves++;
         this.wave = this.spawnedWaves;
         this.waveText.setText('Wave: ' + this.wave + '/' + this.totalWaves);
+        this.waveSpawning = true;
 
         // Increase difficulty each wave
         const girlCount = Math.min(2 + this.wave, 6);
         this.girlSpeed = 35 + this.wave * 8;
 
         const waveText = this.add.text(400, 200, '\u{1F49C} Wave ' + this.wave + '! \u{1F49C}', {
-            fontSize: '20px', fontFamily: 'Courier New, monospace',
+            fontSize: '27px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF69B4', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(150);
         this.tweens.add({
@@ -202,6 +204,7 @@ class ShooScene extends Phaser.Scene {
             this.time.delayedCall(i * 600, () => {
                 if (this.gameOver || this.gameWon) return;
                 this.spawnGirl();
+                if (i === girlCount - 1) this.waveSpawning = false;
             });
         }
     }
@@ -220,8 +223,8 @@ class ShooScene extends Phaser.Scene {
         const dir = fromLeft ? 1 : -1;
 
         // Thought bubble
-        const thought = this.add.text(x, yVariation - 35, '<3', {
-            fontSize: '14px'
+        const thought = this.add.text(x, yVariation - 35, '❤️', {
+            fontSize: '21px'
         }).setOrigin(0.5).setDepth(7);
         this.tweens.add({
             targets: thought, y: thought.y - 5,
@@ -249,7 +252,7 @@ class ShooScene extends Phaser.Scene {
         const shooTexts = ['SHOO! \u{1F44B}', 'BACK OFF! \u{1F624}', 'HE\'S MINE! \u{1F48D}', 'BYE! \u{1F44B}', 'GIRL, NO! \u{1F645}', 'EXCUSE ME?! \u{1F612}'];
         const shoo = this.add.text(this.jennifer.x, this.jennifer.y - 30,
             shooTexts[Phaser.Math.Between(0, shooTexts.length - 1)], {
-                fontSize: '13px', fontFamily: 'Courier New, monospace',
+                fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FF4444', stroke: '#000000', strokeThickness: 3
             }
         ).setOrigin(0.5).setDepth(50);
@@ -278,7 +281,7 @@ class ShooScene extends Phaser.Scene {
         }
 
         // Scared emoji
-        const scared = this.add.text(girl.x, girl.y - 20, 'EEK!', { fontSize: '12px', fontFamily: 'Courier New, monospace', color: '#FFFF00', stroke: '#000000', strokeThickness: 2 })
+        const scared = this.add.text(girl.x, girl.y - 20, 'EEK!', { fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FFFF00', stroke: '#000000', strokeThickness: 2 })
             .setOrigin(0.5).setDepth(50);
         this.tweens.add({
             targets: scared, y: scared.y - 25, alpha: 0, scaleX: 1.3, scaleY: 1.3,
@@ -298,7 +301,7 @@ class ShooScene extends Phaser.Scene {
         const girl = girlObj.sprite;
 
         // Girl flirts
-        const flirt = this.add.text(girl.x, girl.y - 30, 'xo', { fontSize: '14px', fontFamily: 'Courier New, monospace', color: '#FF69B4', stroke: '#000000', strokeThickness: 2 })
+        const flirt = this.add.text(girl.x, girl.y - 30, 'xo', { fontSize: '21px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FF69B4', stroke: '#000000', strokeThickness: 2 })
             .setOrigin(0.5).setDepth(50);
         this.tweens.add({
             targets: flirt, y: flirt.y - 20, alpha: 0,
@@ -306,7 +309,7 @@ class ShooScene extends Phaser.Scene {
         });
 
         // Jennifer gets angry
-        const angry = this.add.text(this.jennifer.x, this.jennifer.y - 25, 'GRR!', { fontSize: '12px', fontFamily: 'Courier New, monospace', color: '#FF4444', stroke: '#000000', strokeThickness: 2 })
+        const angry = this.add.text(this.jennifer.x, this.jennifer.y - 25, 'GRR!', { fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FF4444', stroke: '#000000', strokeThickness: 2 })
             .setOrigin(0.5).setDepth(50);
         this.tweens.add({
             targets: angry, y: angry.y - 20, alpha: 0,
@@ -351,12 +354,12 @@ class ShooScene extends Phaser.Scene {
         this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.6).setDepth(200);
 
         this.add.text(w / 2, h / 2 - 20, 'Too much jealousy! Try again!', {
-            fontSize: '22px', fontFamily: 'Courier New, monospace',
+            fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF4444', stroke: '#000000', strokeThickness: 5
         }).setOrigin(0.5).setDepth(201);
 
         const retryBtn = this.add.text(w / 2, h / 2 + 30, '>> Retry <<', {
-            fontSize: '22px', fontFamily: 'Courier New, monospace',
+            fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', backgroundColor: '#44AA44',
             padding: { x: 20, y: 8 }
         }).setOrigin(0.5).setDepth(201).setInteractive({ useHandCursor: true });
@@ -381,7 +384,7 @@ class ShooScene extends Phaser.Scene {
 
         const text = this.add.text(w / 2, h / 2 - 25,
             'He\'s all yours, Jennifer!\nShooed ' + this.shooCount + ' girls away!', {
-                fontSize: '20px', fontFamily: 'Courier New, monospace',
+                fontSize: '27px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFD700', stroke: '#000000', strokeThickness: 4,
                 align: 'center', lineSpacing: 8
             }
@@ -397,8 +400,8 @@ class ShooScene extends Phaser.Scene {
             delay: 60, repeat: 40, callback: () => {
                 const heart = this.add.text(
                     Phaser.Math.Between(50, w - 50), -15,
-                    ['<3', '<3', '<3', '<3'][Phaser.Math.Between(0, 3)],
-                    { fontSize: '18px' }
+                    ['❤️', '❤️', '❤️', '❤️'][Phaser.Math.Between(0, 3)],
+                    { fontSize: '24px' }
                 ).setDepth(160);
                 this.tweens.add({
                     targets: heart,
@@ -414,8 +417,8 @@ class ShooScene extends Phaser.Scene {
             targets: this.jennifer,
             x: this.boyfriend.x - 25, duration: 800, ease: 'Power2',
             onComplete: () => {
-                const coupleHeart = this.add.text(this.boyfriend.x - 10, this.boyfriend.y - 50, '<3', {
-                    fontSize: '22px'
+                const coupleHeart = this.add.text(this.boyfriend.x - 10, this.boyfriend.y - 50, '❤️', {
+                    fontSize: '26px'
                 }).setOrigin(0.5).setDepth(20);
                 this.tweens.add({
                     targets: coupleHeart,
@@ -432,11 +435,11 @@ class ShooScene extends Phaser.Scene {
             const overlay2 = this.add.rectangle(400, 225, 800, 450, 0x000000, 0.85)
                 .setDepth(300).setAlpha(0);
             const monsterText1 = this.add.text(400, 180, 'All of that anger built up and created...', {
-                fontSize: '16px', fontFamily: 'Courier New, monospace',
+                fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 4
             }).setOrigin(0.5).setDepth(301).setAlpha(0);
             const monsterText2 = this.add.text(400, 225, 'A CHOCOLATE MONSTER!', {
-                fontSize: '24px', fontFamily: 'Courier New, monospace',
+                fontSize: '29px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FF4444', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(301).setAlpha(0);
 
@@ -511,7 +514,7 @@ class ShooScene extends Phaser.Scene {
         }
 
         // Check wave completion
-        if (allGirlsDone && this.girls.length === 0 && this.gameStarted && !this.wavePending) {
+        if (allGirlsDone && this.girls.length === 0 && this.gameStarted && !this.wavePending && !this.waveSpawning) {
             if (this.spawnedWaves >= this.totalWaves) {
                 this.winScene();
             } else {

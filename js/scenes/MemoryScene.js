@@ -18,17 +18,17 @@ class MemoryScene extends Phaser.Scene {
 
         // Corner decorations
         [{ x: 20, y: 20 }, { x: w - 20, y: 20 }, { x: 20, y: h - 20 }, { x: w - 20, y: h - 20 }].forEach(pos => {
-            this.add.text(pos.x, pos.y, '🍫', { fontSize: '14px' }).setOrigin(0.5).setDepth(2);
+            this.add.text(pos.x, pos.y, '🍫', { fontSize: '21px' }).setOrigin(0.5).setDepth(2);
         });
 
         // Title
         this.add.text(w / 2, 25, 'Chocolate Tasting Lounge', {
-            fontSize: '20px', fontFamily: 'Courier New, monospace',
+            fontSize: '27px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(10);
 
         this.add.text(w / 2, 48, 'Match the chocolate pairs!', {
-            fontSize: '11px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#BCAAA4', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(10);
 
@@ -75,10 +75,10 @@ class MemoryScene extends Phaser.Scene {
                 .setStrokeStyle(2, 0xA1887F)
                 .setInteractive({ useHandCursor: true })
                 .setDepth(5);
-            const backEmoji = this.add.text(x, y - 8, '🍫', { fontSize: '26px' })
+            const backEmoji = this.add.text(x, y - 8, '🍫', { fontSize: '31px' })
                 .setOrigin(0.5).setDepth(6);
             const backQ = this.add.text(x, y + 18, '?', {
-                fontSize: '18px', fontFamily: 'Courier New, monospace',
+                fontSize: '24px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#D7CCC8'
             }).setOrigin(0.5).setDepth(6);
 
@@ -91,10 +91,10 @@ class MemoryScene extends Phaser.Scene {
             const face = this.add.rectangle(x, y, cardW, cardH, type.color)
                 .setStrokeStyle(2, 0xFFD700)
                 .setDepth(5).setVisible(false);
-            const faceEmoji = this.add.text(x, y - 14, type.emoji, { fontSize: '32px' })
+            const faceEmoji = this.add.text(x, y - 14, type.emoji, { fontSize: '38px' })
                 .setOrigin(0.5).setDepth(6).setVisible(false);
             const faceName = this.add.text(x, y + 22, type.name, {
-                fontSize: '13px', fontFamily: 'Courier New, monospace',
+                fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: type.textColor, stroke: '#000000', strokeThickness: 1
             }).setOrigin(0.5).setDepth(6).setVisible(false);
 
@@ -114,18 +114,18 @@ class MemoryScene extends Phaser.Scene {
 
         // UI
         this.movesText = this.add.text(20, h - 22, 'Moves: 0', {
-            fontSize: '13px', fontFamily: 'Courier New, monospace',
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#BCAAA4', stroke: '#000000', strokeThickness: 2
         }).setDepth(10);
 
         this.pairsText = this.add.text(w - 20, h - 22, 'Pairs: 0/6', {
-            fontSize: '13px', fontFamily: 'Courier New, monospace',
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#BCAAA4', stroke: '#000000', strokeThickness: 2
         }).setOrigin(1, 0).setDepth(10);
 
         // Hint text
         const hint = this.add.text(w / 2, h - 22, 'Tap cards to flip them!', {
-            fontSize: '11px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#8D6E63', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(10);
 
@@ -199,7 +199,7 @@ class MemoryScene extends Phaser.Scene {
                 const praise = this.add.text(
                     (c1.x + c2.x) / 2, Math.min(c1.y, c2.y) - 30, phrase,
                     {
-                        fontSize: '18px', fontFamily: 'Courier New, monospace',
+                        fontSize: '24px', fontFamily: 'Arial Black, Arial, sans-serif',
                         color: '#FFD700', stroke: '#000000', strokeThickness: 3
                     }
                 ).setOrigin(0.5).setDepth(100);
@@ -258,7 +258,7 @@ class MemoryScene extends Phaser.Scene {
         const text = this.add.text(w / 2, h / 2 - 30,
             'All Chocolates Matched!\n' + stars + '\nMoves: ' + this.moves,
             {
-                fontSize: '22px', fontFamily: 'Courier New, monospace',
+                fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFD700', stroke: '#000000', strokeThickness: 4,
                 align: 'center', lineSpacing: 8
             }
@@ -269,13 +269,6 @@ class MemoryScene extends Phaser.Scene {
             duration: 600, ease: 'Back.easeOut'
         });
 
-        const nextText = this.add.text(w / 2, h / 2 + 55, 'Get ready for the boss fight!', {
-            fontSize: '13px', fontFamily: 'Courier New, monospace',
-            color: '#FF69B4', stroke: '#000000', strokeThickness: 3
-        }).setOrigin(0.5).setDepth(200).setAlpha(0);
-
-        this.tweens.add({ targets: nextText, alpha: 1, duration: 500, delay: 1500 });
-
         // Chocolate confetti
         this.time.addEvent({
             delay: 80, repeat: 30, callback: () => {
@@ -283,7 +276,7 @@ class MemoryScene extends Phaser.Scene {
                 const choc = this.add.text(
                     Phaser.Math.Between(50, w - 50), -20,
                     emojis[Phaser.Math.Between(0, emojis.length - 1)],
-                    { fontSize: '20px' }
+                    { fontSize: '27px' }
                 ).setDepth(160);
                 this.tweens.add({
                     targets: choc,

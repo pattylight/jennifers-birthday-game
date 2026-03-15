@@ -165,7 +165,10 @@
 
     <div id="a2hs-overlay">
         <div class="a2hs-card">
-            <div class="a2hs-title">&#127911; Play Fullscreen!</div>
+            <div class="a2hs-title">&#127881; Jennifer's Cruise Adventure &#127881;</div>
+            <div style="font-size:15px; margin-bottom:18px; color:#ccc; line-height:1.5;">
+                To play this game, you need to add it to your Home Screen first!
+            </div>
             <div class="a2hs-steps">
                 <div class="a2hs-step">
                     <div class="a2hs-step-num">1</div>
@@ -179,20 +182,19 @@
                 <div class="a2hs-arrow">&#x2B07;&#xFE0F;</div>
                 <div class="a2hs-step">
                     <div class="a2hs-step-num">3</div>
-                    <div>Open the game from your <strong>Home Screen</strong> for fullscreen! &#127881;</div>
+                    <div>Open the game from your <strong>Home Screen</strong> to play! &#127911;</div>
                 </div>
             </div>
-            <button class="a2hs-dismiss" onclick="document.getElementById('a2hs-overlay').classList.remove('show'); document.querySelector('.a2hs-safari-arrow').style.display='none'; localStorage.setItem('a2hs-dismissed','1');">
-                Got it!
-            </button>
         </div>
         <div class="a2hs-safari-arrow">&#x2B07;&#xFE0F;</div>
     </div>
 
     <script>
-        // Show overlay only on iOS Safari, not if already in standalone mode
-        if (/iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone && !localStorage.getItem('a2hs-dismissed')) {
+        // Block gameplay on iOS unless launched from Home Screen (standalone mode)
+        if (/iPhone|iPad/.test(navigator.userAgent) && !navigator.standalone) {
             document.getElementById('a2hs-overlay').classList.add('show');
+            // Hide the game canvas so it can't be interacted with
+            document.getElementById('game-container').style.display = 'none';
         }
     </script>
 </body>

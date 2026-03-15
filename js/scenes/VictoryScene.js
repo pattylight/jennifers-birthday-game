@@ -38,8 +38,8 @@ class VictoryScene extends Phaser.Scene {
 
         // Main birthday text - scales in with bounce
         const happyText = this.add.text(w / 2, 60, 'HAPPY 32nd', {
-            fontSize: '48px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '53px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             stroke: '#8B4513',
             strokeThickness: 6,
@@ -47,8 +47,8 @@ class VictoryScene extends Phaser.Scene {
         }).setOrigin(0.5).setScale(0).setDepth(10);
 
         const birthdayText = this.add.text(w / 2, 115, 'BIRTHDAY!', {
-            fontSize: '48px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '53px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF69B4',
             stroke: '#8B0045',
             strokeThickness: 6,
@@ -56,8 +56,8 @@ class VictoryScene extends Phaser.Scene {
         }).setOrigin(0.5).setScale(0).setDepth(10);
 
         const nameText = this.add.text(w / 2, 170, '~ JENNIFER ~', {
-            fontSize: '36px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '40px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF',
             stroke: '#000000',
             strokeThickness: 4,
@@ -114,7 +114,7 @@ class VictoryScene extends Phaser.Scene {
         });
 
         // Jennifer sprite doing a little victory dance
-        const jenSprite = this.add.sprite(w / 2 - 60, h - 140, 'jennifer', 0).setScale(2).setDepth(10);
+        const jenSprite = this.add.sprite(w / 2 - 60, h - 80, 'jennifer', 0).setScale(2).setDepth(10);
         this.tweens.add({
             targets: jenSprite,
             y: jenSprite.y - 15,
@@ -131,7 +131,7 @@ class VictoryScene extends Phaser.Scene {
         });
 
         // Honey jumping around happily
-        const honeySprite = this.add.sprite(w / 2 + 60, h - 125, 'honey', 0).setScale(1.8).setDepth(10);
+        const honeySprite = this.add.sprite(w / 2 + 60, h - 65, 'honey', 0).setScale(1.8).setDepth(10);
         this.tweens.add({
             targets: honeySprite,
             y: honeySprite.y - 25,
@@ -142,21 +142,12 @@ class VictoryScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        // "HONEY" label
-        const honeyLabel = this.add.text(w / 2 + 60, h - 165, 'HONEY', {
-            fontSize: '10px',
-            fontFamily: 'Courier New, monospace',
-            color: '#FFD700',
-            stroke: '#000000',
-            strokeThickness: 2
-        }).setOrigin(0.5).setDepth(11);
-
         // Hearts popping around them
         this.time.addEvent({
             delay: 300,
             callback: () => {
                 const hx = Phaser.Math.Between(w / 2 - 100, w / 2 + 100);
-                const hy = Phaser.Math.Between(h - 180, h - 120);
+                const hy = Phaser.Math.Between(h - 120, h - 60);
                 const heart = this.add.image(hx, hy, 'heart').setScale(0.8).setDepth(9);
                 this.tweens.add({
                     targets: heart,
@@ -170,56 +161,41 @@ class VictoryScene extends Phaser.Scene {
             loop: true
         });
 
+        // Dark panel behind message for readability
+        this.msgBg = this.add.rectangle(w / 2, 290, w * 0.85, 100, 0x000000, 0.5)
+            .setOrigin(0.5).setDepth(9).setAlpha(0);
+
         // Personal message (appears after delay)
         const message = this.add.text(w / 2, 275, '', {
-            fontSize: '14px',
-            fontFamily: 'Courier New, monospace',
-            color: '#FFB6C1',
+            fontSize: '24px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
+            color: '#FFFFFF',
             align: 'center',
-            wordWrap: { width: 500 },
-            lineSpacing: 4
+            wordWrap: { width: w * 0.8 },
+            lineSpacing: 6,
+            stroke: '#000000',
+            strokeThickness: 3
         }).setOrigin(0.5).setDepth(10);
 
         // Type out the message character by character
-        const fullMessage = "You're the most amazing woman in the world.\nHere's to 32 incredible years of YOU!\nI love you more than all the espresso martinis\non every cruise ship in the world.";
+        const fullMessage = "You're the most amazing woman in the world.\nHere's to 32 incredible years of YOU!\nI love you more than all the espresso martinis\non every cruise ship in the world.\n\nLove, Patrick";
         let charIndex = 0;
 
         this.time.delayedCall(2500, () => {
+            this.tweens.add({ targets: this.msgBg, alpha: 1, duration: 400 });
             this.time.addEvent({
                 delay: 40,
                 callback: () => {
                     if (charIndex < fullMessage.length) {
                         message.setText(fullMessage.substring(0, charIndex + 1));
+                        // Resize background to fit text
+                        this.msgBg.setSize(Math.max(message.width + 40, 200), message.height + 24);
+                        this.msgBg.setPosition(w / 2, message.y);
                         charIndex++;
                     }
                 },
                 repeat: fullMessage.length - 1
             });
-        });
-
-        // Score display
-        const scoreText = this.add.text(w / 2, 340, '', {
-            fontSize: '16px',
-            fontFamily: 'Courier New, monospace',
-            color: '#FFD700',
-            stroke: '#000000',
-            strokeThickness: 3,
-            align: 'center'
-        }).setOrigin(0.5).setAlpha(0).setDepth(10);
-
-        this.time.delayedCall(6500, () => {
-            scoreText.setText('Espresso Martinis collected: ' + collected + '/' + total);
-            this.tweens.add({
-                targets: scoreText,
-                alpha: 1,
-                duration: 500
-            });
-        });
-
-        // Abrupt cut to MusterScene after birthday moment
-        this.time.delayedCall(7000, () => {
-            // Sudden interruption - no fade, just CUT
-            this.scene.start('MusterScene');
         });
 
         // Play celebration music

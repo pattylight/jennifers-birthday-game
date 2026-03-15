@@ -7,7 +7,7 @@ class GameScene extends Phaser.Scene {
     create() {
         // Level dimensions
         this.levelWidth = 4000;
-        this.levelHeight = 450;
+        this.levelHeight = 380;
 
         // Score
         this.martinisCollected = 0;
@@ -34,20 +34,16 @@ class GameScene extends Phaser.Scene {
         this.enemies = this.physics.add.group();
         this.createEnemies();
 
-        // Create bounce pads
-        this.bouncePads = this.physics.add.staticGroup();
-        this.createBouncePads();
-
         // Create moving platforms
         this.movingPlatformData = [];
         this.createMovingPlatforms();
 
         // Create Jennifer
-        this.jennifer = new Jennifer(this, 100, 300);
+        this.jennifer = new Jennifer(this, 100, 230);
         this.jennifer.setDepth(10);
 
         // Create Honey
-        this.honey = new Honey(this, 60, 300);
+        this.honey = new Honey(this, 60, 230);
         this.honey.setDepth(9);
 
         // Collisions
@@ -58,9 +54,6 @@ class GameScene extends Phaser.Scene {
         // Enemy collisions
         this.physics.add.collider(this.enemies, this.platforms);
         this.physics.add.overlap(this.jennifer, this.enemies, this.handleEnemyCollision, null, this);
-
-        // Bounce pad collisions
-        this.physics.add.collider(this.jennifer, this.bouncePads, this.bounceJennifer, null, this);
 
         // Camera follows Jennifer
         this.cameras.main.setBounds(0, 0, this.levelWidth, this.levelHeight);
@@ -79,7 +72,7 @@ class GameScene extends Phaser.Scene {
 
         // Arrow pointing to end
         this.endArrow = this.add.text(this.levelWidth - 80, this.levelHeight - 140, 'EXIT', {
-            fontSize: '18px', fontFamily: 'Courier New, monospace',
+            fontSize: '24px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5);
         this.tweens.add({
@@ -102,31 +95,37 @@ class GameScene extends Phaser.Scene {
             .setScrollFactor(0).setDepth(200);
 
         const storyText1 = this.add.text(400, 160, 'We made it on board!', {
-            fontSize: '26px', fontFamily: 'Courier New, monospace',
+            fontSize: '31px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 5
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
 
         const storyText2 = this.add.text(400, 205, 'Time to relax with some', {
-            fontSize: '16px', fontFamily: 'Courier New, monospace',
+            fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
 
         const storyText3 = this.add.text(400, 240, 'Espresso Martinis!', {
-            fontSize: '22px', fontFamily: 'Courier New, monospace',
+            fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
 
         const storyText4 = this.add.text(400, 285, 'Avoid the creepy men trying to hit on you!', {
-            fontSize: '13px', fontFamily: 'Courier New, monospace',
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF6666', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
 
+        const hintText = this.add.text(400, 320, 'Tip: You can double jump!', {
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
+            color: '#88CCFF', stroke: '#000000', strokeThickness: 2
+        }).setOrigin(0.5).setScrollFactor(0).setDepth(201);
+
         this.tweens.add({
-            targets: [overlay, storyText1, storyText2, storyText3, storyText4],
+            targets: [overlay, storyText1, storyText2, storyText3, storyText4, hintText],
             alpha: 0, duration: 800, delay: 3500,
             onComplete: () => {
                 overlay.destroy(); storyText1.destroy();
                 storyText2.destroy(); storyText3.destroy(); storyText4.destroy();
+                hintText.destroy();
             }
         });
     }
@@ -149,16 +148,6 @@ class GameScene extends Phaser.Scene {
                 'cloud'
             ).setScrollFactor(0.15).setScale(Phaser.Math.FloatBetween(0.4, 1)).setAlpha(0.7).setDepth(-8);
             this.clouds.push(cloud);
-        }
-
-        // Ship railing (foreground parallax)
-        for (let x = 0; x < this.levelWidth; x += 40) {
-            this.add.rectangle(x, this.levelHeight - 130, 4, 35, 0xCCCCCC)
-                .setScrollFactor(0.95).setDepth(5).setAlpha(0.4);
-        }
-        for (let x = 0; x < this.levelWidth; x += 200) {
-            this.add.rectangle(x + 100, this.levelHeight - 145, 200, 3, 0xCCCCCC)
-                .setScrollFactor(0.95).setDepth(5).setAlpha(0.4);
         }
 
         // Ocean at the bottom
@@ -191,7 +180,7 @@ class GameScene extends Phaser.Scene {
         this.add.rectangle(175, 210, 3, 30, 0x8B4513, 0.6).setScrollFactor(sf).setDepth(dep);
         // Pool sign
         this.add.text(350, 155, 'POOL DECK', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -213,7 +202,7 @@ class GameScene extends Phaser.Scene {
         this.add.circle(1090, 190, 4, 0x87CEEB, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.circle(1075, 188, 3, 0x87CEEB, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.text(800, 38, 'WATER SLIDE', {
-            fontSize: '9px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#1565C0', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -242,7 +231,7 @@ class GameScene extends Phaser.Scene {
         this.add.circle(1290, 142, 6, 0xFF6600, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.circle(1290, 140, 4, 0xFFD700, 0.5).setScrollFactor(sf).setDepth(dep);
         this.add.text(1400, 130, 'TIKI BAR', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -257,7 +246,7 @@ class GameScene extends Phaser.Scene {
         const foodEmojis = ['P', 'C', 'S', 'M', 'F', 'R'];
         foodEmojis.forEach((emoji, i) => {
             this.add.text(1800 + i * 38, 190, emoji, {
-                fontSize: '10px', fontFamily: 'Courier New, monospace', color: '#FFD700'
+                fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FFD700'
             }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
         });
         // Sneeze guard (glass over food)
@@ -267,7 +256,7 @@ class GameScene extends Phaser.Scene {
         this.add.triangle(1830, 165, 0, 10, 8, 0, 16, 10, 0xDDDDDD, 0.4).setScrollFactor(sf).setDepth(dep);
         this.add.triangle(1970, 165, 0, 10, 8, 0, 16, 10, 0xDDDDDD, 0.4).setScrollFactor(sf).setDepth(dep);
         this.add.text(1900, 150, 'OCEAN BUFFET', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -293,7 +282,7 @@ class GameScene extends Phaser.Scene {
         });
         // DJ booth
         this.add.rectangle(2500, 185, 40, 30, 0x333333, 0.6).setScrollFactor(sf).setDepth(dep);
-        this.add.text(2500, 182, 'DJ', { fontSize: '10px', fontFamily: 'Courier New, monospace', color: '#FF69B4' }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.6);
+        this.add.text(2500, 182, 'DJ', { fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FF69B4' }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.6);
         // Dance floor (checkered)
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 2; j++) {
@@ -306,7 +295,7 @@ class GameScene extends Phaser.Scene {
         this.add.rectangle(2340, 150, 18, 25, 0x222222, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.rectangle(2560, 150, 18, 25, 0x222222, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.text(2450, 95, 'CLUB OCEANA', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF69B4', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.8);
 
@@ -325,7 +314,7 @@ class GameScene extends Phaser.Scene {
         // Sand bunker
         this.add.ellipse(3050, 215, 40, 12, 0xF4D03F, 0.4).setScrollFactor(sf).setDepth(dep);
         this.add.text(3000, 165, 'MINI GOLF', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#228B22', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -353,7 +342,7 @@ class GameScene extends Phaser.Scene {
         this.add.rectangle(3460, 218, 16, 8, 0xFFFFFF, 0.5).setScrollFactor(sf).setDepth(dep);
         this.add.rectangle(3462, 216, 14, 4, 0xFF69B4, 0.4).setScrollFactor(sf).setDepth(dep);
         this.add.text(3450, 170, 'SPA & HOT TUB', {
-            fontSize: '10px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#4169E1', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -374,7 +363,7 @@ class GameScene extends Phaser.Scene {
         this.add.rectangle(3770, 80, 2, 30, 0xCCCCCC, 0.4).setScrollFactor(sf).setDepth(dep);
         this.add.circle(3770, 64, 3, 0xFF0000, 0.5).setScrollFactor(sf).setDepth(dep);
         this.add.text(3800, 85, 'BRIDGE', {
-            fontSize: '9px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#2C3E50', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.7);
 
@@ -388,7 +377,7 @@ class GameScene extends Phaser.Scene {
             const gx = Phaser.Math.Between(100, this.levelWidth - 100);
             const gy = Phaser.Math.Between(40, 130);
             const gull = this.add.text(gx, gy, '~', {
-                fontSize: '14px', fontFamily: 'serif', color: '#555555'
+                fontSize: '21px', fontFamily: 'serif', color: '#555555'
             }).setScrollFactor(0.12).setDepth(dep).setAlpha(0.4);
             this.tweens.add({
                 targets: gull,
@@ -430,24 +419,24 @@ class GameScene extends Phaser.Scene {
         // Elevated platforms — cruise ship themed (deck chairs, tables, etc.)
         const platformLayout = [
             // x, y, width (in tiles), type
-            { x: 250, y: 350, w: 3, type: 'deck' },
-            { x: 400, y: 300, w: 4, type: 'deck' },
-            { x: 600, y: 260, w: 3, type: 'deck' },
-            { x: 800, y: 320, w: 5, type: 'deck' },
-            { x: 1050, y: 260, w: 3, type: 'deck' },
-            { x: 1200, y: 200, w: 4, type: 'deck' },
-            { x: 1450, y: 280, w: 3, type: 'deck' },
-            { x: 1600, y: 340, w: 4, type: 'deck' },
-            { x: 1800, y: 240, w: 3, type: 'deck' },
-            { x: 2000, y: 300, w: 5, type: 'deck' },
-            { x: 2200, y: 200, w: 3, type: 'deck' },
-            { x: 2400, y: 260, w: 4, type: 'deck' },
-            { x: 2650, y: 320, w: 3, type: 'deck' },
-            { x: 2850, y: 230, w: 4, type: 'deck' },
-            { x: 3100, y: 280, w: 3, type: 'deck' },
-            { x: 3300, y: 200, w: 4, type: 'deck' },
-            { x: 3550, y: 300, w: 5, type: 'deck' },
-            { x: 3750, y: 250, w: 3, type: 'deck' },
+            { x: 250, y: 280, w: 3, type: 'deck' },
+            { x: 400, y: 230, w: 4, type: 'deck' },
+            { x: 600, y: 190, w: 3, type: 'deck' },
+            { x: 800, y: 250, w: 5, type: 'deck' },
+            { x: 1050, y: 190, w: 3, type: 'deck' },
+            { x: 1200, y: 130, w: 4, type: 'deck' },
+            { x: 1450, y: 210, w: 3, type: 'deck' },
+            { x: 1600, y: 270, w: 4, type: 'deck' },
+            { x: 1800, y: 170, w: 3, type: 'deck' },
+            { x: 2000, y: 230, w: 5, type: 'deck' },
+            { x: 2200, y: 130, w: 3, type: 'deck' },
+            { x: 2400, y: 190, w: 4, type: 'deck' },
+            { x: 2650, y: 250, w: 3, type: 'deck' },
+            { x: 2850, y: 160, w: 4, type: 'deck' },
+            { x: 3100, y: 210, w: 3, type: 'deck' },
+            { x: 3300, y: 130, w: 4, type: 'deck' },
+            { x: 3550, y: 230, w: 5, type: 'deck' },
+            { x: 3750, y: 180, w: 3, type: 'deck' },
         ];
 
         platformLayout.forEach(p => {
@@ -460,11 +449,11 @@ class GameScene extends Phaser.Scene {
 
         // Pool float platforms (bouncy!)
         const floatPositions = [
-            { x: 550, y: 350 },
-            { x: 1350, y: 310 },
-            { x: 2100, y: 350 },
-            { x: 2900, y: 350 },
-            { x: 3650, y: 340 },
+            { x: 550, y: 280 },
+            { x: 1350, y: 240 },
+            { x: 2100, y: 280 },
+            { x: 2900, y: 280 },
+            { x: 3650, y: 270 },
         ];
 
         floatPositions.forEach(fp => {
@@ -476,21 +465,21 @@ class GameScene extends Phaser.Scene {
 
     placeMartinis() {
         const martiniPositions = [
-            { x: 280, y: 310 },
-            { x: 430, y: 260 },
-            { x: 600, y: 220 },
-            { x: 800, y: 280 },
-            { x: 1080, y: 220 },
-            { x: 1250, y: 160 },
-            { x: 1480, y: 240 },
-            { x: 1700, y: 300 },
-            { x: 1850, y: 200 },
-            { x: 2050, y: 260 },
-            { x: 2250, y: 160 },
-            { x: 2500, y: 220 },
-            { x: 2900, y: 190 },
-            { x: 3350, y: 160 },
-            { x: 3600, y: 260 },
+            { x: 280, y: 240 },
+            { x: 430, y: 190 },
+            { x: 600, y: 150 },
+            { x: 800, y: 210 },
+            { x: 1080, y: 150 },
+            { x: 1250, y: 90 },
+            { x: 1480, y: 170 },
+            { x: 1700, y: 230 },
+            { x: 1850, y: 130 },
+            { x: 2050, y: 190 },
+            { x: 2250, y: 90 },
+            { x: 2500, y: 150 },
+            { x: 2900, y: 120 },
+            { x: 3350, y: 90 },
+            { x: 3600, y: 190 },
         ];
 
         martiniPositions.forEach((pos, i) => {
@@ -554,16 +543,17 @@ class GameScene extends Phaser.Scene {
     }
 
     createEnemies() {
+        const groundY = this.levelHeight - 60;
         const enemyPositions = [
-            { x: 270, y: 330, leftBound: 250, rightBound: 334 },
-            { x: 440, y: 280, leftBound: 400, rightBound: 524 },
-            { x: 830, y: 300, leftBound: 800, rightBound: 952 },
-            { x: 1230, y: 180, leftBound: 1200, rightBound: 1324 },
-            { x: 1620, y: 320, leftBound: 1600, rightBound: 1724 },
-            { x: 2030, y: 280, leftBound: 2000, rightBound: 2152 },
-            { x: 2420, y: 240, leftBound: 2400, rightBound: 2524 },
-            { x: 2870, y: 210, leftBound: 2850, rightBound: 2974 },
-            { x: 3320, y: 180, leftBound: 3300, rightBound: 3424 },
+            { x: 270, y: groundY, leftBound: 200, rightBound: 400 },
+            { x: 550, y: groundY, leftBound: 450, rightBound: 700 },
+            { x: 900, y: groundY, leftBound: 800, rightBound: 1050 },
+            { x: 1250, y: groundY, leftBound: 1150, rightBound: 1400 },
+            { x: 1650, y: groundY, leftBound: 1550, rightBound: 1800 },
+            { x: 2050, y: groundY, leftBound: 1950, rightBound: 2200 },
+            { x: 2450, y: groundY, leftBound: 2350, rightBound: 2600 },
+            { x: 2900, y: groundY, leftBound: 2800, rightBound: 3050 },
+            { x: 3350, y: groundY, leftBound: 3250, rightBound: 3500 },
         ];
 
         enemyPositions.forEach(ep => {
@@ -578,39 +568,12 @@ class GameScene extends Phaser.Scene {
         });
     }
 
-    createBouncePads() {
-        const padPositions = [
-            { x: 500, y: this.levelHeight - 40 },
-            { x: 1150, y: this.levelHeight - 40 },
-            { x: 2100, y: this.levelHeight - 40 },
-            { x: 2800, y: this.levelHeight - 40 },
-            { x: 3500, y: this.levelHeight - 40 },
-        ];
-
-        padPositions.forEach(pp => {
-            const pad = this.bouncePads.create(pp.x, pp.y, 'bounce_pad');
-            pad.setDisplaySize(64, 16);
-            pad.refreshBody();
-        });
-
-        // Visual label above each pad
-        padPositions.forEach(pp => {
-            this.add.text(pp.x, pp.y - 16, 'BOING!', {
-                fontSize: '7px',
-                fontFamily: 'Courier New, monospace',
-                color: '#FF69B4',
-                stroke: '#000000',
-                strokeThickness: 2
-            }).setOrigin(0.5).setDepth(3).setAlpha(0.6);
-        });
-    }
-
     createMovingPlatforms() {
         const configs = [
-            { x: 700, y: 290, tiles: 3, minX: 600, maxX: 850, speed: 40 },
-            { x: 1700, y: 260, tiles: 3, minX: 1600, maxX: 1850, speed: 50 },
-            { x: 2600, y: 270, tiles: 3, minX: 2500, maxX: 2750, speed: 45 },
-            { x: 3400, y: 260, tiles: 3, minX: 3300, maxX: 3550, speed: 55 },
+            { x: 700, y: 220, tiles: 3, minX: 600, maxX: 850, speed: 40 },
+            { x: 1700, y: 190, tiles: 3, minX: 1600, maxX: 1850, speed: 50 },
+            { x: 2600, y: 200, tiles: 3, minX: 2500, maxX: 2750, speed: 45 },
+            { x: 3400, y: 190, tiles: 3, minX: 3300, maxX: 3550, speed: 55 },
         ];
 
         configs.forEach(cfg => {
@@ -625,7 +588,7 @@ class GameScene extends Phaser.Scene {
 
             // Arrow indicators
             const arrow = this.add.text(cfg.x + (cfg.tiles * 16), cfg.y - 20, '<->', {
-                fontSize: '10px'
+                fontSize: '18px'
             }).setOrigin(0.5).setDepth(3).setAlpha(0.5);
 
             this.movingPlatformData.push({
@@ -647,7 +610,7 @@ class GameScene extends Phaser.Scene {
             jennifer.setVelocityY(-300);
 
             // Squish effect
-            const squish = this.add.text(enemy.x, enemy.y, 'POW!', { fontSize: '16px', fontFamily: 'Courier New, monospace', color: '#FF4444', stroke: '#000000', strokeThickness: 3 })
+            const squish = this.add.text(enemy.x, enemy.y, 'POW!', { fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FF4444', stroke: '#000000', strokeThickness: 3 })
                 .setOrigin(0.5).setDepth(20);
             this.tweens.add({
                 targets: squish,
@@ -664,7 +627,7 @@ class GameScene extends Phaser.Scene {
                 const star = this.add.text(
                     enemy.x + Phaser.Math.Between(-15, 15),
                     enemy.y,
-                    '*', { fontSize: '10px' }
+                    '*', { fontSize: '18px' }
                 ).setDepth(20);
                 this.tweens.add({
                     targets: star,
@@ -681,59 +644,6 @@ class GameScene extends Phaser.Scene {
         } else {
             jennifer.hurt();
         }
-    }
-
-    bounceJennifer(jennifer, pad) {
-        if (jennifer.body.velocity.y > 0) {
-            jennifer.setVelocityY(-650);
-            jennifer.hasDoubleJumped = false;
-
-            // Visual spring effect
-            this.tweens.add({
-                targets: pad,
-                scaleY: 0.3,
-                duration: 100,
-                yoyo: true,
-                ease: 'Power2'
-            });
-
-            // Boing text
-            const boing = this.add.text(pad.x, pad.y - 20, 'BOING!', {
-                fontSize: '14px',
-                fontFamily: 'Courier New, monospace',
-                color: '#FF69B4',
-                stroke: '#000000',
-                strokeThickness: 3
-            }).setOrigin(0.5).setDepth(20);
-
-            this.tweens.add({
-                targets: boing,
-                y: boing.y - 40,
-                alpha: 0,
-                duration: 600,
-                onComplete: () => boing.destroy()
-            });
-
-            this.playBoingSound();
-        }
-    }
-
-    playBoingSound() {
-        try {
-            const audioCtx = this.sound.context;
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(200, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.15);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-            osc.start(audioCtx.currentTime);
-            osc.stop(audioCtx.currentTime + 0.3);
-        } catch(e) {}
     }
 
     playStompSound() {
@@ -771,8 +681,8 @@ class GameScene extends Phaser.Scene {
 
         // Score popup
         const popup = this.add.text(martini.x, martini.y - 20, '+1', {
-            fontSize: '16px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '22px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             stroke: '#000000',
             strokeThickness: 3
@@ -787,7 +697,7 @@ class GameScene extends Phaser.Scene {
         });
 
         // Update UI
-        this.scoreText.setText('Drinks: ' + this.martinisCollected + '/' + this.totalMartinis);
+        this.scoreText.setText(this.martinisCollected + '/' + this.totalMartinis);
 
         // Collection sound
         this.playCollectSound();
@@ -845,11 +755,11 @@ class GameScene extends Phaser.Scene {
         const overlay = this.add.rectangle(400, 225, 800, 450, 0x000000, 0.7)
             .setScrollFactor(0).setDepth(200);
         const outroT1 = this.add.text(400, 190, 'Hurry up!', {
-            fontSize: '24px', fontFamily: 'Courier New, monospace',
+            fontSize: '29px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 5
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201).setScale(0.5);
         const outroT2 = this.add.text(400, 235, 'Our chocolate pairing class starts soon!', {
-            fontSize: '15px', fontFamily: 'Courier New, monospace',
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setScrollFactor(0).setDepth(201).setAlpha(0);
 
@@ -1010,10 +920,14 @@ class GameScene extends Phaser.Scene {
     }
 
     createUI() {
-        // Martini counter
-        this.scoreText = this.add.text(20, 20, 'Drinks: 0/' + this.totalMartinis, {
-            fontSize: '20px',
-            fontFamily: 'Courier New, monospace',
+        // Martini icon in UI
+        this.scoreIcon = this.add.image(30, 28, 'martini')
+            .setScrollFactor(0).setDepth(100).setScale(1.2);
+
+        // Martini counter text (just the numbers)
+        this.scoreText = this.add.text(50, 20, '0/' + this.totalMartinis, {
+            fontSize: '27px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF',
             stroke: '#000000',
             strokeThickness: 4
@@ -1021,8 +935,8 @@ class GameScene extends Phaser.Scene {
 
         // "HONEY" label above the dog
         this.honeyLabel = this.add.text(0, 0, 'HONEY', {
-            fontSize: '8px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '14px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             stroke: '#000000',
             strokeThickness: 2

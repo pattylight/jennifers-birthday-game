@@ -26,20 +26,20 @@ class MusterScene extends Phaser.Scene {
         for (let x = 80; x < w; x += 250) {
             this.add.rectangle(x, 200, 50, 110, 0x6B4226).setDepth(-4);
             this.add.rectangle(x, 200, 44, 104, 0x8B6238).setDepth(-4);
-            this.add.text(x, 165, '[=]', { fontSize: '10px' }).setOrigin(0.5).setDepth(-3);
+            this.add.text(x, 165, '[=]', { fontSize: '18px' }).setOrigin(0.5).setDepth(-3);
         }
         // "MUSTER STATIONS" sign on wall
         this.add.rectangle(w / 2, 95, 220, 28, 0xCC0000).setDepth(-2);
         this.add.text(w / 2, 95, '!! MUSTER STATIONS !!', {
-            fontSize: '11px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#880000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(-1);
 
         // Safety poster
         this.add.rectangle(650, 180, 50, 60, 0xFFFFFF).setDepth(-3);
-        this.add.text(650, 165, '[!]', { fontSize: '16px' }).setOrigin(0.5).setDepth(-2);
+        this.add.text(650, 165, '[!]', { fontSize: '22px' }).setOrigin(0.5).setDepth(-2);
         this.add.text(650, 185, 'KNOW\nYOUR\nSTATION!', {
-            fontSize: '5px', fontFamily: 'Courier New, monospace',
+            fontSize: '12px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#CC0000', align: 'center'
         }).setOrigin(0.5).setDepth(-2);
 
@@ -120,7 +120,7 @@ class MusterScene extends Phaser.Scene {
                 this.speechTexts = [];
 
                 const txt = this.add.text(260, h - 195, s.text, {
-                    fontSize: s.size, fontFamily: 'Courier New, monospace',
+                    fontSize: s.size, fontFamily: 'Arial Black, Arial, sans-serif',
                     color: s.color, stroke: '#000000', strokeThickness: 1,
                     wordWrap: { width: 260 }, align: 'center'
                 }).setOrigin(0.5).setDepth(51);
@@ -135,7 +135,7 @@ class MusterScene extends Phaser.Scene {
                 if (i === speeches.length - 1) {
                     // Jennifer panics
                     const panic = this.add.text(500, h - 145, '???', {
-                        fontSize: '22px', fontFamily: 'Courier New, monospace',
+                        fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
                         color: '#FF4444', stroke: '#000000', strokeThickness: 4
                     }).setOrigin(0.5).setDepth(50);
                     this.tweens.add({
@@ -162,7 +162,7 @@ class MusterScene extends Phaser.Scene {
 
         // Dramatic prompt
         this.promptText = this.add.text(w / 2, 140, '!! ENTER YOUR MUSTER STATION NUMBER !!', {
-            fontSize: '16px', fontFamily: 'Courier New, monospace',
+            fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF0000', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(100);
 
@@ -174,7 +174,7 @@ class MusterScene extends Phaser.Scene {
 
         // Timer ticking down for pressure
         this.timerText = this.add.text(w / 2, 170, 'HURRY! 10', {
-            fontSize: '14px', fontFamily: 'Courier New, monospace',
+            fontSize: '21px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(100);
 
@@ -323,7 +323,7 @@ class MusterScene extends Phaser.Scene {
 
         // Giant WRONG text
         const wrongText = this.add.text(w / 2, h / 2 - 60, 'XX WRONG!!! XX', {
-            fontSize: '52px', fontFamily: 'Courier New, monospace',
+            fontSize: '57px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF0000', stroke: '#000000', strokeThickness: 8
         }).setOrigin(0.5).setDepth(300).setScale(0.1);
 
@@ -335,7 +335,7 @@ class MusterScene extends Phaser.Scene {
         // Subtitle
         this.time.delayedCall(800, () => {
             const subText = this.add.text(w / 2, h / 2 + 5, 'THE SHIP IS SINKING!!!', {
-                fontSize: '22px', fontFamily: 'Courier New, monospace',
+                fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFD700', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(300);
 
@@ -348,7 +348,7 @@ class MusterScene extends Phaser.Scene {
         // Captain facepalms
         this.time.delayedCall(600, () => {
             const facepalm = this.add.text(this.captain.x, this.captain.y - 50, '*sigh*', {
-                fontSize: '28px'
+                fontSize: '34px'
             }).setOrigin(0.5).setDepth(250);
             this.tweens.add({
                 targets: facepalm, y: facepalm.y - 15, alpha: 0,
@@ -359,7 +359,7 @@ class MusterScene extends Phaser.Scene {
         // Jennifer confused/embarrassed
         this.time.delayedCall(400, () => {
             const oops = this.add.text(this.jennifer.x, this.jennifer.y - 50, 'oops...', {
-                fontSize: '14px', fontFamily: 'Courier New, monospace',
+                fontSize: '21px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
             }).setOrigin(0.5).setDepth(250);
             this.tweens.add({
@@ -414,7 +414,7 @@ class MusterScene extends Phaser.Scene {
         // Funny "Classic Jennifer" text
         this.time.delayedCall(2500, () => {
             const classic = this.add.text(w / 2, h / 2 - 10, 'Classic Jennifer...', {
-                fontSize: '24px', fontFamily: 'Courier New, monospace',
+                fontSize: '29px', fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(300);
 
@@ -429,7 +429,7 @@ class MusterScene extends Phaser.Scene {
             this.cameras.main.fadeOut(1000, 0, 0, 0);
             this.cameras.main.rotation = 0;
             this.time.delayedCall(1000, () => {
-                this.scene.start('TitleScene');
+                this.scene.start('VictoryScene');
             });
         });
     }

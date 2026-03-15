@@ -87,8 +87,8 @@ class BossScene extends Phaser.Scene {
 
         // Honey senses danger!
         const text1 = this.add.text(w / 2, h / 2 - 60, 'Honey senses danger...', {
-            fontSize: '18px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '24px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             stroke: '#000000',
             strokeThickness: 4
@@ -146,8 +146,8 @@ class BossScene extends Phaser.Scene {
 
             // Show transformation text
             const text2 = this.add.text(w / 2, h / 2 - 40, 'HONEY became the BARK BLASTER!', {
-                fontSize: '16px',
-                fontFamily: 'Courier New, monospace',
+                fontSize: '22px',
+                fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FF69B4',
                 stroke: '#000000',
                 strokeThickness: 4
@@ -185,8 +185,8 @@ class BossScene extends Phaser.Scene {
 
         // Warning
         const warning = this.add.text(w / 2, h / 2 - 40, 'A CHOCOLATE MONSTER APPEARS!', {
-            fontSize: '20px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '27px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF4444',
             stroke: '#000000',
             strokeThickness: 4,
@@ -222,29 +222,40 @@ class BossScene extends Phaser.Scene {
 
         // Collision: chocolate boss touches Jennifer
         this.physics.add.overlap(this.jennifer, this.boss, (jennifer, boss) => {
-            if (boss.isDead || boss.isInvulnerable || boss.isEntering) return;
-            jennifer.hurt();
+            try {
+                if (!boss || !boss.active || boss.isDead || boss.isInvulnerable || boss.isEntering || this.bossIsDead) return;
+                jennifer.hurt();
+            } catch(e) { console.warn('Boss touch error:', e); }
         });
 
         // Collision: chocolate balls hit Jennifer
         this.physics.add.overlap(this.jennifer, this.boss.chocoBalls, (jennifer, ball) => {
-            ball.destroy();
-            jennifer.hurt();
+            try {
+                if (!ball || !ball.active) return;
+                ball.destroy();
+                jennifer.hurt();
+            } catch(e) { console.warn('Choco ball error:', e); }
         });
 
         // Collision: bark bullets hit boss
-        this.physics.add.overlap(this.barkBullets, this.boss, (bullet, boss) => {
-            bullet.destroy();
-            if (boss.isDead || boss.isInvulnerable || boss.isEntering) return;
-            const killed = boss.takeDamage();
-            this.updateHealthBar();
-            if (killed) this.bossDefeated();
+        this.physics.add.overlap(this.barkBullets, this.boss, (objA, objB) => {
+            try {
+                // Determine which is the bullet and which is the boss
+                const bullet = (objA === this.boss) ? objB : objA;
+                const boss = this.boss;
+                if (!bullet || !bullet.active || !boss || !boss.active) return;
+                bullet.destroy();
+                if (boss.isDead || boss.isInvulnerable || boss.isEntering) return;
+                const killed = boss.takeDamage();
+                this.updateHealthBar();
+                if (killed && !this.bossIsDead) this.bossDefeated();
+            } catch(e) { console.warn('Bullet overlap error:', e); }
         });
 
         // Hint text
         const hint = this.add.text(w / 2, h - 55, 'Press X or SHOOT to shoot! Aim by facing left/right!', {
-            fontSize: '11px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '16px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             stroke: '#000000',
             strokeThickness: 3
@@ -310,8 +321,8 @@ class BossScene extends Phaser.Scene {
         this.hpBar = this.add.rectangle(w / 2, 30, 200, 14, 0x8B4513)
             .setScrollFactor(0).setDepth(101);
         this.add.text(w / 2, 12, 'CHOCOLATE MONSTER', {
-            fontSize: '10px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '18px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF',
             stroke: '#000000',
             strokeThickness: 2
@@ -341,8 +352,8 @@ class BossScene extends Phaser.Scene {
             this.cameras.main.height / 2 - 20,
             '** MELTED! **',
             {
-                fontSize: '32px',
-                fontFamily: 'Courier New, monospace',
+                fontSize: '38px',
+                fontFamily: 'Arial Black, Arial, sans-serif',
                 color: '#FFD700',
                 stroke: '#000000',
                 strokeThickness: 5
@@ -567,7 +578,7 @@ class BossScene extends Phaser.Scene {
         if (this.shootCooldown > 0) this.shootCooldown -= delta;
 
         // Boss AI
-        if (this.boss && this.bossActive && !this.bossIsDead) {
+        if (this.boss && this.boss.active && this.bossActive && !this.bossIsDead) {
             this.boss.updateBoss(time, delta);
         }
 

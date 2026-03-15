@@ -81,21 +81,17 @@ class TeslaScene extends Phaser.Scene {
 
         // === TESLA ===
         this.tesla = this.add.image(140, this.laneY[1], 'tesla').setDepth(5);
-        this.jenOnCar = this.add.sprite(125, this.laneY[1] - 12, 'jennifer', 0).setScale(0.5).setDepth(6);
-
-        // Patrick in passenger seat
-        this.patrickOnCar = this.add.image(145, this.laneY[1] - 12, 'boyfriend').setScale(0.5).setDepth(6);
 
         // "Model Y" label
         this.teslaLabel = this.add.text(140, this.laneY[1] + 26, 'MODEL Y', {
-            fontSize: '7px', fontFamily: 'Courier New, monospace',
+            fontSize: '13px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(7).setAlpha(0.6);
 
         // === GAME STATE ===
         this.speed = 200;
         this.distance = 0;
-        this.targetDistance = 3000;
+        this.targetDistance = 10000;
         this.lives = 3;
         this.isInvulnerable = false;
         this.obstacles = [];
@@ -121,22 +117,22 @@ class TeslaScene extends Phaser.Scene {
 
         // === INTRO ===
         const intro1 = this.add.text(w / 2, h / 2 - 55, 'Patrick & Jennifer are LATE!', {
-            fontSize: '22px', fontFamily: 'Courier New, monospace',
+            fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF4444', stroke: '#000000', strokeThickness: 5
         }).setOrigin(0.5).setDepth(200);
 
         const intro2 = this.add.text(w / 2, h / 2 - 18, 'The cruise ship leaves in 10 minutes!', {
-            fontSize: '15px', fontFamily: 'Courier New, monospace',
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(200);
 
         const intro3 = this.add.text(w / 2, h / 2 + 15, 'Floor it, Jennifer!!', {
-            fontSize: '16px', fontFamily: 'Courier New, monospace',
+            fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(200);
 
         const intro4 = this.add.text(w / 2, h / 2 + 50, 'UP / DOWN - Dodge obstacles!', {
-            fontSize: '14px', fontFamily: 'Courier New, monospace',
+            fontSize: '21px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#AAAAAA', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(200);
 
@@ -195,8 +191,6 @@ class TeslaScene extends Phaser.Scene {
             y: targetY, duration: 180, ease: 'Power2',
             onComplete: () => { this.canSwitchLane = true; }
         });
-        this.tweens.add({ targets: this.jenOnCar, y: targetY - 12, duration: 180, ease: 'Power2' });
-        this.tweens.add({ targets: this.patrickOnCar, y: targetY - 10, duration: 180, ease: 'Power2' });
         this.tweens.add({ targets: this.teslaLabel, y: targetY + 26, duration: 180, ease: 'Power2' });
 
         this.playLaneChangeSound();
@@ -204,7 +198,7 @@ class TeslaScene extends Phaser.Scene {
 
     createUI() {
         const w = 800;
-        this.livesText = this.add.text(20, 12, 'HP: 3/3', { fontSize: '14px', fontFamily: 'Courier New, monospace', color: '#FF4444', stroke: '#000000', strokeThickness: 2 }).setDepth(100);
+        this.livesText = this.add.text(20, 12, '❤️❤️❤️', { fontSize: '24px' }).setDepth(100);
 
         // Progress bar
         this.add.rectangle(w / 2, 14, 204, 14, 0x333333).setDepth(99);
@@ -212,15 +206,15 @@ class TeslaScene extends Phaser.Scene {
         this.progressBar = this.add.rectangle(w / 2 - 100, 14, 0, 10, 0x44FF44).setOrigin(0, 0.5).setDepth(100);
 
         // Destination label
-        this.add.text(w / 2 + 110, 14, 'PORT', { fontSize: '10px', fontFamily: 'Courier New, monospace', color: '#FFFFFF', stroke: '#000000', strokeThickness: 2 }).setOrigin(0, 0.5).setDepth(100);
+        this.add.text(w / 2 + 110, 14, 'PORT', { fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FFFFFF', stroke: '#000000', strokeThickness: 2 }).setOrigin(0, 0.5).setDepth(100);
 
-        this.distText = this.add.text(w / 2, 30, '0m / 3000m', {
-            fontSize: '9px', fontFamily: 'Courier New, monospace',
+        this.distText = this.add.text(w / 2, 30, '0m / 6000m', {
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(100);
 
         this.speedText = this.add.text(w - 15, 14, '60 mph', {
-            fontSize: '11px', fontFamily: 'Courier New, monospace',
+            fontSize: '16px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 2
         }).setOrigin(1, 0.5).setDepth(100);
     }
@@ -238,7 +232,7 @@ class TeslaScene extends Phaser.Scene {
         this.obstacles.push(obs);
 
         // Double obstacle at higher distances
-        if (this.distance > 400 && Math.random() < 0.3) {
+        if (this.distance > 800 && Math.random() < 0.3) {
             const lane2 = (lane + Phaser.Math.Between(1, 2)) % 3;
             const obs2 = this.add.image(w + 50, this.laneY[lane2],
                 Math.random() < 0.5 ? 'traffic_cone' : 'obstacle_car').setDepth(4);
@@ -251,7 +245,7 @@ class TeslaScene extends Phaser.Scene {
         // Charge pickup when missing lives
         if (this.lives < 3 && Math.random() < 0.15) {
             const pLane = Phaser.Math.Between(0, 2);
-            const pickup = this.add.text(w + 40, this.laneY[pLane], '+HP', { fontSize: '16px', fontFamily: 'Courier New, monospace', color: '#44FF44', stroke: '#000000', strokeThickness: 2 })
+            const pickup = this.add.text(w + 40, this.laneY[pLane], '+HP', { fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#44FF44', stroke: '#000000', strokeThickness: 2 })
                 .setOrigin(0.5).setDepth(6);
             pickup.lane = pLane;
             pickup.collected = false;
@@ -266,20 +260,21 @@ class TeslaScene extends Phaser.Scene {
         this.isInvulnerable = true;
         this.updateLivesDisplay();
 
+        // Slow down on crash
+        this.speed = Math.max(200, this.speed * 0.4);
+
         // Flash Tesla
         this.tweens.add({
-            targets: [this.tesla, this.jenOnCar, this.patrickOnCar],
+            targets: [this.tesla],
             alpha: 0.3, duration: 100, yoyo: true, repeat: 5,
             onComplete: () => {
                 if (this.tesla) this.tesla.alpha = 1;
-                if (this.jenOnCar) this.jenOnCar.alpha = 1;
-                if (this.patrickOnCar) this.patrickOnCar.alpha = 1;
                 this.time.delayedCall(400, () => { this.isInvulnerable = false; });
             }
         });
 
         // Impact
-        const boom = this.add.text(this.tesla.x + 35, this.tesla.y, 'CRASH!', { fontSize: '16px', fontFamily: 'Courier New, monospace', color: '#FF4444', stroke: '#000000', strokeThickness: 3 })
+        const boom = this.add.text(this.tesla.x + 35, this.tesla.y, 'CRASH!', { fontSize: '22px', fontFamily: 'Arial Black, Arial, sans-serif', color: '#FF4444', stroke: '#000000', strokeThickness: 3 })
             .setOrigin(0.5).setDepth(20);
         this.tweens.add({
             targets: boom, scaleX: 1.5, scaleY: 1.5, alpha: 0,
@@ -302,7 +297,7 @@ class TeslaScene extends Phaser.Scene {
         }
 
         const sparkle = this.add.text(pickup.x, pickup.y, '+1 HP', {
-            fontSize: '14px', fontFamily: 'Courier New, monospace',
+            fontSize: '21px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(20);
         this.tweens.add({
@@ -318,7 +313,7 @@ class TeslaScene extends Phaser.Scene {
         this.nearMissCount++;
         const texts = ['CLOSE!', 'WHEW!', 'NICE!', 'SMOOTH!'];
         const msg = this.add.text(x, y - 25, texts[this.nearMissCount % texts.length], {
-            fontSize: '12px', fontFamily: 'Courier New, monospace',
+            fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#44FF44', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(20);
         this.tweens.add({
@@ -328,7 +323,7 @@ class TeslaScene extends Phaser.Scene {
     }
 
     updateLivesDisplay() {
-        this.livesText.setText('HP: ' + this.lives + '/3');
+        this.livesText.setText('❤️'.repeat(this.lives) + '🖤'.repeat(3 - this.lives));
     }
 
     triggerGameOver() {
@@ -339,12 +334,12 @@ class TeslaScene extends Phaser.Scene {
         this.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0.6).setDepth(200);
 
         this.add.text(w / 2, h / 2 - 30, 'CRASH! Try again!', {
-            fontSize: '28px', fontFamily: 'Courier New, monospace',
+            fontSize: '34px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF4444', stroke: '#000000', strokeThickness: 5
         }).setOrigin(0.5).setDepth(201);
 
         const retryBtn = this.add.text(w / 2, h / 2 + 30, '>> Retry <<', {
-            fontSize: '22px', fontFamily: 'Courier New, monospace',
+            fontSize: '26px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF', backgroundColor: '#44AA44',
             padding: { x: 20, y: 8 }
         }).setOrigin(0.5).setDepth(201).setInteractive({ useHandCursor: true });
@@ -363,7 +358,7 @@ class TeslaScene extends Phaser.Scene {
         const w = 800, h = 450;
 
         const text = this.add.text(w / 2, h / 2 - 10, 'We made it!!\nTime to board the cruise!', {
-            fontSize: '18px', fontFamily: 'Courier New, monospace',
+            fontSize: '24px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700', stroke: '#000000', strokeThickness: 4,
             align: 'center', lineSpacing: 8
         }).setOrigin(0.5).setDepth(200).setScale(0.5);
@@ -387,7 +382,7 @@ class TeslaScene extends Phaser.Scene {
     update(time, delta) {
         if (!this.gameStarted || this.gameOver) return;
 
-        const dt = delta / 1000;
+        const dt = Math.min(delta / 1000, 0.05);
 
         // Keyboard input
         if (Phaser.Input.Keyboard.JustDown(this.cursors.up) || Phaser.Input.Keyboard.JustDown(this.cursors.w)) {
@@ -399,8 +394,8 @@ class TeslaScene extends Phaser.Scene {
 
         // Distance & speed
         this.distance += this.speed * dt * 1.0;
-        this.speed = Math.min(900, 400 + this.distance * 0.16);
-        this.obstacleInterval = Math.max(400, 1000 - this.distance * 0.15);
+        this.speed = Math.min(900, 400 + this.distance * 0.08);
+        this.obstacleInterval = Math.max(400, 1000 - this.distance * 0.075);
 
         if (this.distance >= this.targetDistance) {
             this.reachDestination();

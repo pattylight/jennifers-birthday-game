@@ -86,9 +86,17 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     die() {
+        if (this.isDead) return;
         this.isDead = true;
         this.body.setVelocity(0, 0);
         this.body.setAllowGravity(false);
+        this.body.setEnable(false);
+
+        // Kill all active tweens on the boss
+        this.scene.tweens.killTweensOf(this);
+
+        // Destroy all chocolate balls
+        this.chocoBalls.clear(true, true);
 
         // Chocolate splatter
         for (let i = 0; i < 15; i++) {
@@ -142,6 +150,7 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
 
     shootChocolate(targetX, targetY) {
         if (this.isDead || this.isEntering) return;
+        if (!this.chocoBalls || !this.scene) return;
 
         const ball = this.chocoBalls.create(this.x, this.y + 20, 'choco_ball');
         if (!ball) return;
@@ -187,12 +196,14 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
             duration: 400,
             ease: 'Power2',
             onComplete: () => {
+                if (this.isDead) return;
                 this.scene.tweens.add({
                     targets: this,
                     y: this.scene.cameras.main.height - 80,
                     duration: 200,
                     ease: 'Power4',
                     onComplete: () => {
+                        if (this.isDead) return;
                         this.body.setAllowGravity(true);
                         this.scene.cameras.main.shake(300, 0.02);
                         this.slamming = false;
@@ -232,7 +243,7 @@ class ChocolateBoss extends Phaser.Physics.Arcade.Sprite {
     }
 
     updateBoss(time, delta) {
-        if (this.isDead || this.isEntering) return;
+        if (this.isDead || this.isEntering || !this.body || !this.body.enable) return;
 
         const jennifer = this.scene.jennifer;
         if (!jennifer) return;

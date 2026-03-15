@@ -11,14 +11,14 @@ class BootScene extends Phaser.Scene {
 
         const bg = this.add.rectangle(w / 2, h / 2, w, h, 0x1a1a2e);
         const loadingText = this.add.text(w / 2, h / 2 - 30, 'Loading...', {
-            fontSize: '24px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '29px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700'
         }).setOrigin(0.5);
 
         const subText = this.add.text(w / 2, h / 2 + 10, 'Preparing the cruise ship...', {
-            fontSize: '14px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '21px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#87CEEB'
         }).setOrigin(0.5);
     }

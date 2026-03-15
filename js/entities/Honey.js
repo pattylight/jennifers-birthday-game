@@ -77,7 +77,7 @@ class Honey extends Phaser.Physics.Arcade.Sprite {
     bark() {
         // Show little "Woof!" text
         const woofText = this.scene.add.text(this.x, this.y - 30, 'WOOF!', {
-            fontSize: '16px'
+            fontSize: '22px'
         }).setOrigin(0.5);
 
         this.scene.tweens.add({

@@ -38,16 +38,16 @@ class TitleScene extends Phaser.Scene {
 
         // Title text
         const titleShadow = this.add.text(w / 2 + 3, 63, "Jenny's\nFirst Cruise", {
-            fontSize: '36px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '40px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#000000',
             align: 'center',
             lineSpacing: 5
         }).setOrigin(0.5).setAlpha(0.3);
 
         const title = this.add.text(w / 2, 60, "Jenny's\nFirst Cruise", {
-            fontSize: '36px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '40px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFD700',
             align: 'center',
             stroke: '#8B4513',
@@ -57,7 +57,7 @@ class TitleScene extends Phaser.Scene {
 
         // Subtitle
         this.add.text(w / 2, 125, '~ ~ ~', {
-            fontSize: '24px',
+            fontSize: '29px',
         }).setOrigin(0.5);
 
         // Espresso martini icon floating
@@ -72,9 +72,9 @@ class TitleScene extends Phaser.Scene {
         });
 
         // "Tap to Play" blinking text
-        const tapText = this.add.text(w / 2, h - 200, '» TAP TO PLAY «', {
-            fontSize: '22px',
-            fontFamily: 'Courier New, monospace',
+        const tapText = this.add.text(w / 2, h - 240, '» TAP TO PLAY «', {
+            fontSize: '26px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFFFFF',
             stroke: '#000000',
             strokeThickness: 3
@@ -117,8 +117,8 @@ class TitleScene extends Phaser.Scene {
 
         // Credits text
         this.add.text(w / 2, h - 15, 'Made with love for Jennifer', {
-            fontSize: '11px',
-            fontFamily: 'Courier New, monospace',
+            fontSize: '16px',
+            fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FFB6C1',
             stroke: '#000000',
             strokeThickness: 2
