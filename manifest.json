@@ -1,0 +1,9 @@
+{
+    "name": "Jennifer's Cruise Adventure",
+    "short_name": "Cruise Game",
+    "start_url": "./index.html",
+    "display": "fullscreen",
+    "orientation": "landscape",
+    "background_color": "#87CEEB",
+    "theme_color": "#FF69B4"
+}

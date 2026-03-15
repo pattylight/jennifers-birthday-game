@@ -1,4 +1,4 @@
-// MusterScene.js — The captain asks Jennifer for her muster station number. She never remembers it.
+// MusterScene.js - The captain asks Jennifer for her muster station number. She never remembers it.
 class MusterScene extends Phaser.Scene {
     constructor() {
         super({ key: 'MusterScene' });
@@ -26,18 +26,18 @@ class MusterScene extends Phaser.Scene {
         for (let x = 80; x < w; x += 250) {
             this.add.rectangle(x, 200, 50, 110, 0x6B4226).setDepth(-4);
             this.add.rectangle(x, 200, 44, 104, 0x8B6238).setDepth(-4);
-            this.add.text(x, 165, '\uD83D\uDEAA', { fontSize: '10px' }).setOrigin(0.5).setDepth(-3);
+            this.add.text(x, 165, '[=]', { fontSize: '10px' }).setOrigin(0.5).setDepth(-3);
         }
         // "MUSTER STATIONS" sign on wall
         this.add.rectangle(w / 2, 95, 220, 28, 0xCC0000).setDepth(-2);
-        this.add.text(w / 2, 95, '\u26A0\uFE0F MUSTER STATIONS \u26A0\uFE0F', {
+        this.add.text(w / 2, 95, '!! MUSTER STATIONS !!', {
             fontSize: '11px', fontFamily: 'Courier New, monospace',
             color: '#FFFFFF', stroke: '#880000', strokeThickness: 2
         }).setOrigin(0.5).setDepth(-1);
 
         // Safety poster
         this.add.rectangle(650, 180, 50, 60, 0xFFFFFF).setDepth(-3);
-        this.add.text(650, 165, '\uD83D\uDEDF', { fontSize: '16px' }).setOrigin(0.5).setDepth(-2);
+        this.add.text(650, 165, '[!]', { fontSize: '16px' }).setOrigin(0.5).setDepth(-2);
         this.add.text(650, 185, 'KNOW\nYOUR\nSTATION!', {
             fontSize: '5px', fontFamily: 'Courier New, monospace',
             color: '#CC0000', align: 'center'
@@ -104,9 +104,9 @@ class MusterScene extends Phaser.Scene {
         // Bubble tail
         const tail = this.add.triangle(260, h - 148, 0, 0, 20, 0, 10, 15, 0xFFFFFF).setDepth(50);
 
-        // Captain's speech — typed out
+        // Captain's speech - typed out
         const speeches = [
-            { text: '\uD83D\uDEA8 THE BOAT IS SINKING!!!', delay: 0, color: '#FF0000', size: '13px' },
+            { text: '!! THE BOAT IS SINKING!!!', delay: 0, color: '#FF0000', size: '13px' },
             { text: 'QUICK!!!', delay: 1200, color: '#FF0000', size: '15px' },
             { text: 'What\'s your MUSTER STATION?!', delay: 2200, color: '#222222', size: '12px' },
         ];
@@ -161,7 +161,7 @@ class MusterScene extends Phaser.Scene {
         const w = 800, h = 450;
 
         // Dramatic prompt
-        this.promptText = this.add.text(w / 2, 140, '\uD83D\uDEA8 ENTER YOUR MUSTER STATION NUMBER! \uD83D\uDEA8', {
+        this.promptText = this.add.text(w / 2, 140, '!! ENTER YOUR MUSTER STATION NUMBER !!', {
             fontSize: '16px', fontFamily: 'Courier New, monospace',
             color: '#FF0000', stroke: '#000000', strokeThickness: 4
         }).setOrigin(0.5).setDepth(100);
@@ -173,7 +173,7 @@ class MusterScene extends Phaser.Scene {
         });
 
         // Timer ticking down for pressure
-        this.timerText = this.add.text(w / 2, 170, '\u23F0 HURRY! 10', {
+        this.timerText = this.add.text(w / 2, 170, 'HURRY! 10', {
             fontSize: '14px', fontFamily: 'Courier New, monospace',
             color: '#FFD700', stroke: '#000000', strokeThickness: 3
         }).setOrigin(0.5).setDepth(100);
@@ -184,7 +184,7 @@ class MusterScene extends Phaser.Scene {
             callback: () => {
                 this.countdown--;
                 if (this.timerText && this.timerText.active) {
-                    this.timerText.setText('\u23F0 HURRY! ' + this.countdown);
+                    this.timerText.setText('HURRY! ' + this.countdown);
                     if (this.countdown <= 3) this.timerText.setColor('#FF0000');
                 }
                 this.playTickSound();
@@ -242,7 +242,7 @@ class MusterScene extends Phaser.Scene {
 
         // Submit button
         this.submitBtn = document.createElement('button');
-        this.submitBtn.textContent = '\uD83D\uDEA8 SUBMIT';
+        this.submitBtn.textContent = 'SUBMIT';
         this.submitBtn.style.cssText = `
             font-family: 'Courier New', monospace;
             font-size: 20px;
@@ -322,7 +322,7 @@ class MusterScene extends Phaser.Scene {
         });
 
         // Giant WRONG text
-        const wrongText = this.add.text(w / 2, h / 2 - 60, '\u274C WRONG!!! \u274C', {
+        const wrongText = this.add.text(w / 2, h / 2 - 60, 'XX WRONG!!! XX', {
             fontSize: '52px', fontFamily: 'Courier New, monospace',
             color: '#FF0000', stroke: '#000000', strokeThickness: 8
         }).setOrigin(0.5).setDepth(300).setScale(0.1);
@@ -334,7 +334,7 @@ class MusterScene extends Phaser.Scene {
 
         // Subtitle
         this.time.delayedCall(800, () => {
-            const subText = this.add.text(w / 2, h / 2 + 5, '\uD83D\uDEA2 THE SHIP IS SINKING!!! \uD83D\uDEA2', {
+            const subText = this.add.text(w / 2, h / 2 + 5, 'THE SHIP IS SINKING!!!', {
                 fontSize: '22px', fontFamily: 'Courier New, monospace',
                 color: '#FFD700', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(300);
@@ -347,7 +347,7 @@ class MusterScene extends Phaser.Scene {
 
         // Captain facepalms
         this.time.delayedCall(600, () => {
-            const facepalm = this.add.text(this.captain.x, this.captain.y - 50, '\uD83E\uDD26', {
+            const facepalm = this.add.text(this.captain.x, this.captain.y - 50, '*sigh*', {
                 fontSize: '28px'
             }).setOrigin(0.5).setDepth(250);
             this.tweens.add({
@@ -358,7 +358,7 @@ class MusterScene extends Phaser.Scene {
 
         // Jennifer confused/embarrassed
         this.time.delayedCall(400, () => {
-            const oops = this.add.text(this.jennifer.x, this.jennifer.y - 50, '\uD83D\uDE05 oops...', {
+            const oops = this.add.text(this.jennifer.x, this.jennifer.y - 50, 'oops...', {
                 fontSize: '14px', fontFamily: 'Courier New, monospace',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 3
             }).setOrigin(0.5).setDepth(250);
@@ -413,7 +413,7 @@ class MusterScene extends Phaser.Scene {
 
         // Funny "Classic Jennifer" text
         this.time.delayedCall(2500, () => {
-            const classic = this.add.text(w / 2, h / 2 - 10, '\uD83D\uDE02 Classic Jennifer... \uD83D\uDE02', {
+            const classic = this.add.text(w / 2, h / 2 - 10, 'Classic Jennifer...', {
                 fontSize: '24px', fontFamily: 'Courier New, monospace',
                 color: '#FFFFFF', stroke: '#000000', strokeThickness: 5
             }).setOrigin(0.5).setDepth(300);

@@ -1,4 +1,4 @@
-// BootScene.js — Loads/generates all assets then transitions to Title
+// BootScene.js - Loads/generates all assets then transitions to Title
 class BootScene extends Phaser.Scene {
     constructor() {
         super({ key: 'BootScene' });
@@ -16,7 +16,7 @@ class BootScene extends Phaser.Scene {
             color: '#FFD700'
         }).setOrigin(0.5);
 
-        const subText = this.add.text(w / 2, h / 2 + 10, '🚢 Preparing the cruise ship...', {
+        const subText = this.add.text(w / 2, h / 2 + 10, 'Preparing the cruise ship...', {
             fontSize: '14px',
             fontFamily: 'Courier New, monospace',
             color: '#87CEEB'

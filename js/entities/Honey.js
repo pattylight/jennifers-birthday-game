@@ -1,4 +1,4 @@
-// Honey.js — Pomeranian companion that follows Jennifer
+// Honey.js - Pomeranian companion that follows Jennifer
 class Honey extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'honey', 0);
@@ -10,7 +10,7 @@ class Honey extends Phaser.Physics.Arcade.Sprite {
         this.body.setAllowGravity(true);
         this.setCollideWorldBounds(true);
 
-        // Breadcrumb trail — stores Jennifer's recent positions
+        // Breadcrumb trail - stores Jennifer's recent positions
         this.trail = [];
         this.trailDelay = 25; // number of frames behind Jennifer
         this.followSpeed = 180;
@@ -76,7 +76,7 @@ class Honey extends Phaser.Physics.Arcade.Sprite {
 
     bark() {
         // Show little "Woof!" text
-        const woofText = this.scene.add.text(this.x, this.y - 30, '🐾', {
+        const woofText = this.scene.add.text(this.x, this.y - 30, 'WOOF!', {
             fontSize: '16px'
         }).setOrigin(0.5);
 

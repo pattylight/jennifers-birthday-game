@@ -1,4 +1,4 @@
-// SpriteGenerator.js — All pixel art drawn programmatically via Canvas API
+// SpriteGenerator.js - All pixel art drawn programmatically via Canvas API
 // Every sprite is hand-coded pixel by pixel to showcase coding skills!
 
 const SpriteGen = {
@@ -408,25 +408,25 @@ const SpriteGen = {
     },
 
     // ==========================================
-    // CREEPY MAN — Small enemy (canvas drawn, 32x40)
+    // CREEPY MAN — Small enemy (canvas drawn, 32x48)
     // ==========================================
     generateCreepyMan() {
         const canvas = document.createElement('canvas');
         canvas.width = 32;
-        canvas.height = 40;
+        canvas.height = 48;
         const ctx = canvas.getContext('2d');
 
         // Body (overweight, Hawaiian shirt)
         ctx.fillStyle = '#FF6347'; // loud red Hawaiian shirt
         ctx.beginPath();
-        ctx.ellipse(16, 24, 11, 10, 0, 0, Math.PI * 2);
+        ctx.ellipse(16, 26, 11, 11, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Shirt pattern (flowers)
         ctx.fillStyle = '#FFFF00';
-        ctx.beginPath(); ctx.arc(12, 22, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(20, 26, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(16, 20, 1.5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(12, 24, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(20, 28, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(16, 22, 1.5, 0, Math.PI * 2); ctx.fill();
 
         // Head (bald, round)
         ctx.fillStyle = '#FFCCAA'; // skin
@@ -467,22 +467,27 @@ const SpriteGen = {
         // Arms reaching out (creepy)
         ctx.strokeStyle = '#FFCCAA';
         ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(5, 22); ctx.lineTo(0, 18); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(27, 22); ctx.lineTo(32, 18); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(5, 24); ctx.lineTo(0, 20); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(27, 24); ctx.lineTo(32, 20); ctx.stroke();
 
         // Hands
         ctx.fillStyle = '#FFCCAA';
-        ctx.beginPath(); ctx.arc(0, 18, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(32, 18, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, 20, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(32, 20, 2, 0, Math.PI * 2); ctx.fill();
 
         // Shorts
         ctx.fillStyle = '#4444AA';
-        ctx.fillRect(8, 33, 16, 5);
+        ctx.fillRect(8, 36, 16, 5);
 
         // Legs
         ctx.fillStyle = '#FFCCAA';
-        ctx.fillRect(10, 36, 4, 4);
-        ctx.fillRect(18, 36, 4, 4);
+        ctx.fillRect(10, 39, 4, 6);
+        ctx.fillRect(18, 39, 4, 6);
+
+        // Sandals
+        ctx.fillStyle = '#8B6914';
+        ctx.fillRect(9, 45, 6, 2);
+        ctx.fillRect(17, 45, 6, 2);
 
         return canvas;
     },
@@ -1026,7 +1031,7 @@ const SpriteGen = {
         ctx.fillStyle = '#FF0000';
         ctx.font = '8px sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText('\u2764', 16, 0);
+        ctx.fillText('<3', 16, 0);
 
         return canvas;
     },

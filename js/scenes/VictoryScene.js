@@ -89,10 +89,8 @@ class VictoryScene extends Phaser.Scene {
             ease: 'Back.easeOut'
         });
 
-        // Cake emoji
-        const cake = this.add.text(w / 2, 210, '[CAKE]', {
-            fontSize: '40px'
-        }).setOrigin(0.5).setAlpha(0).setDepth(10);
+        // Espresso martini icon
+        const cake = this.add.image(w / 2, 210, 'martini').setScale(2.5).setAlpha(0).setDepth(10);
 
         this.tweens.add({
             targets: cake,

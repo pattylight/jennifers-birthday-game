@@ -305,7 +305,7 @@ class GameScene extends Phaser.Scene {
         // Speakers
         this.add.rectangle(2340, 150, 18, 25, 0x222222, 0.6).setScrollFactor(sf).setDepth(dep);
         this.add.rectangle(2560, 150, 18, 25, 0x222222, 0.6).setScrollFactor(sf).setDepth(dep);
-        this.add.text(2450, 95, '🪩 CLUB OCEANA', {
+        this.add.text(2450, 95, 'CLUB OCEANA', {
             fontSize: '10px', fontFamily: 'Courier New, monospace',
             color: '#FF69B4', stroke: '#000000', strokeThickness: 2
         }).setOrigin(0.5).setScrollFactor(sf).setDepth(dep).setAlpha(0.8);

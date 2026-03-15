@@ -1,4 +1,4 @@
-// TouchControls.js — Mobile virtual button overlay
+// TouchControls.js - Mobile virtual button overlay
 class TouchControls {
     constructor(scene) {
         this.scene = scene;
@@ -21,17 +21,17 @@ class TouchControls {
         // Left button
         this.btnLeft = document.createElement('div');
         this.btnLeft.className = 'touch-btn btn-left';
-        this.btnLeft.innerHTML = '◀';
+        this.btnLeft.innerHTML = '&lt;';
 
         // Right button
         this.btnRight = document.createElement('div');
         this.btnRight.className = 'touch-btn btn-right';
-        this.btnRight.innerHTML = '▶';
+        this.btnRight.innerHTML = '&gt;';
 
         // Jump button
         this.btnJump = document.createElement('div');
         this.btnJump.className = 'touch-btn btn-jump';
-        this.btnJump.innerHTML = '▲';
+        this.btnJump.innerHTML = '^';
 
         this.container.appendChild(this.btnLeft);
         this.container.appendChild(this.btnRight);
@@ -144,7 +144,7 @@ class TouchControls {
         if (this.btnShoot) return;
         this.btnShoot = document.createElement('div');
         this.btnShoot.className = 'touch-btn btn-shoot';
-        this.btnShoot.innerHTML = '\uD83D\uDD2B';
+        this.btnShoot.innerHTML = 'X';
         this.container.appendChild(this.btnShoot);
 
         const start = () => {
