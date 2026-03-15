@@ -128,8 +128,13 @@ class TitleScene extends Phaser.Scene {
 
         // Click/tap to start (ignore if a debug link was clicked)
         this.debugClicked = false;
-        this.input.once('pointerdown', () => {
-            if (this.debugClicked) return;
+        this.startTriggered = false;
+        this.input.on('pointerdown', () => {
+            if (this.debugClicked || this.startTriggered) {
+                this.debugClicked = false;
+                return;
+            }
+            this.startTriggered = true;
             this.cameras.main.fadeOut(500, 0, 0, 0);
             this.time.delayedCall(500, () => {
                 this.scene.start('WakeUpScene');

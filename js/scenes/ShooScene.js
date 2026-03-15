@@ -160,13 +160,14 @@ class ShooScene extends Phaser.Scene {
         const w = 800;
 
         // Jealousy meter
-        this.add.text(20, 12, 'Jealousy:', {
+        const jLabel = this.add.text(20, 20, 'Jealousy:', {
             fontSize: '18px', fontFamily: 'Arial Black, Arial, sans-serif',
             color: '#FF69B4', stroke: '#000000', strokeThickness: 2
-        }).setDepth(100);
+        }).setOrigin(0, 0.5).setDepth(100);
 
-        this.jealousyBg = this.add.rectangle(165, 17, 104, 14, 0x333333).setDepth(99);
-        this.jealousyBar = this.add.rectangle(114, 17, 0, 10, 0xFF69B4).setOrigin(0, 0.5).setDepth(100);
+        const barX = jLabel.x + jLabel.width + 10;
+        this.jealousyBg = this.add.rectangle(barX, 20, 104, 14, 0x333333).setOrigin(0, 0.5).setDepth(99);
+        this.jealousyBar = this.add.rectangle(barX + 2, 20, 0, 10, 0xFF69B4).setOrigin(0, 0.5).setDepth(100);
 
         // Wave counter
         this.waveText = this.add.text(w - 20, 12, 'Wave: 0/' + this.totalWaves, {
@@ -213,6 +214,46 @@ class ShooScene extends Phaser.Scene {
                 if (this.gameOver || this.gameWon) return;
                 this.spawnGirl();
                 if (i === girlCount - 1) this.waveSpawning = false;
+            });
+        }
+    }
+
+    spawnBossWave() {
+        const w = 800;
+        this.girlSpeed = 85;
+
+        // Dramatic warning
+        this.cameras.main.shake(400, 0.012);
+
+        const warn1 = this.add.text(400, 140, '⚠️ FINAL WAVE ⚠️', {
+            fontSize: '32px', fontFamily: 'Arial Black, Arial, sans-serif',
+            color: '#FF0000', stroke: '#000000', strokeThickness: 5
+        }).setOrigin(0.5).setDepth(200);
+
+        const warn2 = this.add.text(400, 180, 'THE WHOLE SHIP IS COMING!!', {
+            fontSize: '20px', fontFamily: 'Arial Black, Arial, sans-serif',
+            color: '#FFD700', stroke: '#000000', strokeThickness: 4
+        }).setOrigin(0.5).setDepth(200);
+
+        this.tweens.add({
+            targets: warn1, scaleX: 1.05, scaleY: 1.05,
+            duration: 200, yoyo: true, repeat: 4
+        });
+
+        this.tweens.add({
+            targets: [warn1, warn2], alpha: 0, duration: 500, delay: 2000,
+            onComplete: () => { warn1.destroy(); warn2.destroy(); }
+        });
+
+        // Spawn 12 girls in rapid succession from both sides
+        const bossCount = 12;
+        for (let i = 0; i < bossCount; i++) {
+            this.time.delayedCall(2200 + i * 350, () => {
+                if (this.gameOver || this.gameWon) return;
+                // Alternate speed bursts
+                this.girlSpeed = 75 + Phaser.Math.Between(0, 40);
+                this.spawnGirl();
+                if (i === bossCount - 1) this.waveSpawning = false;
             });
         }
     }
@@ -303,8 +344,10 @@ class ShooScene extends Phaser.Scene {
         if (girlObj.reached || girlObj.shooed) return;
         girlObj.reached = true;
 
-        this.jealousyMeter++;
-        this.updateJealousyBar();
+        if (this.wave < 6) {
+            this.jealousyMeter++;
+            this.updateJealousyBar();
+        }
 
         const girl = girlObj.sprite;
 
@@ -339,7 +382,7 @@ class ShooScene extends Phaser.Scene {
         this.playJealousySound();
         this.cameras.main.shake(150, 0.005);
 
-        if (this.jealousyMeter >= this.maxJealousy) {
+        if (this.wave < 6 && this.jealousyMeter >= this.maxJealousy) {
             this.triggerGameOver();
         }
     }

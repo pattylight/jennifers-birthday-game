@@ -205,9 +205,9 @@ class VictoryScene extends Phaser.Scene {
                 this.scene.start('MusterScene');
             });
         } else {
-            // Second visit (after muster) — show "Play Again" button
-            this.time.delayedCall(8000, () => {
-                const replayText = this.add.text(w / 2, h - 20, '» PLAY AGAIN «', {
+            // Second visit (after muster) — show buttons
+            this.time.delayedCall(4000, () => {
+                const replayText = this.add.text(w / 2, h - 70, '» PLAY AGAIN «', {
                     fontSize: '20px',
                     fontFamily: 'Arial Black, Arial, sans-serif',
                     color: '#FFD700',
@@ -224,6 +224,24 @@ class VictoryScene extends Phaser.Scene {
                 });
 
                 replayText.on('pointerdown', () => {
+                    this.registry.set('musterDone', false);
+                    this.cameras.main.fadeOut(500, 0, 0, 0);
+                    this.time.delayedCall(500, () => {
+                        this.scene.start('TitleScene');
+                    });
+                });
+
+                const menuText = this.add.text(w / 2, h - 40, '[ Main Menu ]', {
+                    fontSize: '16px',
+                    fontFamily: 'Arial Black, Arial, sans-serif',
+                    color: '#AAAAAA',
+                    stroke: '#000000',
+                    strokeThickness: 2
+                }).setOrigin(0.5).setDepth(100).setInteractive({ useHandCursor: true });
+
+                menuText.on('pointerover', () => menuText.setColor('#FFFFFF'));
+                menuText.on('pointerout', () => menuText.setColor('#AAAAAA'));
+                menuText.on('pointerdown', () => {
                     this.registry.set('musterDone', false);
                     this.cameras.main.fadeOut(500, 0, 0, 0);
                     this.time.delayedCall(500, () => {
